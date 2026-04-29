@@ -1,12 +1,10 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
-Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
-You can redistribute and/or modify these files under the terms of the GNU
-Lesser General Public License as published by the Free Software Foundation,
-either version 3 of the license, or (at your option) any later version. You
-should have received a copy of this license (the file "licenses/LGPL.txt") along with
-these files; if not, see https://www.gnu.org/licenses/.
+Glyph outlines derived from Arphic PL KaitiM GB font.
+You can redistribute and/or modify this file under the terms of the Arphic Public License
+as published by Arphic Technology Co., Ltd.
+You should have received a copy of this license along with this file.
+If not, see https://ftp.gnu.org/non-gnu/chinese-fonts-truetype/LICENSE.
 -->
 <svg id="z50" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 <style>
@@ -29,9 +27,9 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z50d1" d="M703 722L318 722L318 662L470 508Q514 464 545 430Q575 395 590 362Q606 329 606 290Q606 242 577 217Q549 192 503 192Q461 192 428 207Q396 221 363 248L324 199Q359 171 403 151Q448 131 503 131Q585 131 632 172Q679 213 679 286Q679 332 661 372Q642 412 608 450Q575 489 530 533L408 653L408 657L703 657Z"/>
+<path id="z50d1" d="M556 562Q722 456 723 369Q723 300 665 246Q611 197 516 197L516 196Q515 196 516 197Q512 196 511 197Q429 197 373 243Q309 294 309 355Q309 380 327 397Q343 412 368 412Q387 412 403 397Q416 382 417 370Q416 343 403 328Q393 315 395 299Q396 277 432 254Q463 232 516 225Q564 225 600 259Q646 304 647 369Q647 445 520 535Q393 629 350 692Q307 744 307 824L674 824L717 706L700 698Q648 776 543 779L360 779Q369 728 401 693Q443 638 556 562Z"/>
 <defs>
 	<clipPath id="z50c1"><use href="#z50d1"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z50c1)" d="M350 220L410 170L500 145L570 160L630 200L660 250L660 290L640 340L600 400L540 470L470 540L400 620L370 675L450 695L570 695L700 690"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z50c1)" d="M360 320L400 260L470 220L520 210L580 230L630 270L660 340L640 430L560 520L470 590L400 660L360 730L340 790L440 800L560 800L700 780"/>
 </svg>

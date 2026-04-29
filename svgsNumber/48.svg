@@ -1,12 +1,10 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
-Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
-You can redistribute and/or modify these files under the terms of the GNU
-Lesser General Public License as published by the Free Software Foundation,
-either version 3 of the license, or (at your option) any later version. You
-should have received a copy of this license (the file "licenses/LGPL.txt") along with
-these files; if not, see https://www.gnu.org/licenses/.
+Glyph outlines derived from Arphic PL KaitiM GB font.
+You can redistribute and/or modify this file under the terms of the Arphic Public License
+as published by Arphic Technology Co., Ltd.
+You should have received a copy of this license along with this file.
+If not, see https://ftp.gnu.org/non-gnu/chinese-fonts-truetype/LICENSE.
 -->
 <svg id="z48" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 <style>
@@ -29,9 +27,9 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z48d1" d="M705 430Q705 523 686 591Q666 658 624 694Q581 730 511 730Q412 730 365 650Q319 571 319 430Q319 335 338 268Q357 201 399 166Q442 130 511 130Q609 130 657 209Q705 288 705 430ZM390 430Q390 550 418 609Q445 669 511 669Q576 669 605 610Q633 550 633 430Q633 310 605 251Q576 191 511 191Q445 191 418 251Q390 310 390 430Z"/>
+<path id="z48d1" d="M357 306Q306 400 306 527Q306 662 364 746Q422 831 509 834Q600 830 664 732Q719 648 719 517Q719 387 667 290Q616 199 517 197L517 196Q516 196 516 197Q515 196 511 197Q415 197 357 306ZM426 290Q457 226 512 225Q563 225 597 292Q643 386 643 517Q643 659 601 744Q571 802 509 806Q454 802 420 746Q383 682 382 527Q382 380 426 290Z"/>
 <defs>
 	<clipPath id="z48c1"><use href="#z48d1"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z48c1)" d="M511 160L580 180L640 240L670 330L670 430L670 530L640 620L580 680L511 700L440 680L380 620L350 530L350 430L350 330L380 240L440 180L511 160"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z48c1)" d="M580 220L512 200L450 220L400 280L370 370L360 500L370 630L400 700L450 760L512 800L570 760L620 700L660 600L670 500L660 370L620 280L580 220"/>
 </svg>

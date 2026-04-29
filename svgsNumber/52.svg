@@ -1,12 +1,10 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
-Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
-You can redistribute and/or modify these files under the terms of the GNU
-Lesser General Public License as published by the Free Software Foundation,
-either version 3 of the license, or (at your option) any later version. You
-should have received a copy of this license (the file "licenses/LGPL.txt") along with
-these files; if not, see https://www.gnu.org/licenses/.
+Glyph outlines derived from Arphic PL KaitiM GB font.
+You can redistribute and/or modify this file under the terms of the Arphic Public License
+as published by Arphic Technology Co., Ltd.
+You should have received a copy of this license along with this file.
+If not, see https://ftp.gnu.org/non-gnu/chinese-fonts-truetype/LICENSE.
 -->
 <svg id="z52" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 <style>
@@ -29,12 +27,12 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z52d1" d="M729 590L644 590L644 722L575 722L575 590L296 590L296 528L570 136L644 136L644 525L729 525ZM575 341Q575 299 576 269Q578 239 579 212L576 212Q569 228 559 246Q550 264 541 276L366 525L575 525Z"/>
-<path id="z52d2" d="M729 590L644 590L644 722L575 722L575 590L296 590L296 528L570 136L644 136L644 525L729 525ZM575 341Q575 299 576 269Q578 239 579 212L576 212Q569 228 559 246Q550 264 541 276L366 525L575 525Z"/>
+<path id="z52d1" d="M618 665L618 206L585 206L580 213L580 229L289 658L289 693L546 693L546 750Q546 796 476 796L476 824L689 824L689 796Q619 796 618 750L618 693L735 693L735 665ZM546 665L322 665L546 317Z"/>
+<path id="z52d2" d="M618 665L618 206L585 206L580 213L580 229L289 658L289 693L546 693L546 750Q546 796 476 796L476 824L689 824L689 796Q619 796 618 750L618 693L735 693L735 665ZM546 665L322 665L546 317Z"/>
 <defs>
 	<clipPath id="z52c1"><use href="#z52d1"/></clipPath>
 	<clipPath id="z52c2"><use href="#z52d2"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z52c1)" d="M580 150L460 350L360 530L530 555L700 555"/>
-<path style="--d:2s;" pathLength="3333" clip-path="url(#z52c2)" d="M610 145L610 722"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z52c1)" d="M600 210L430 480L310 670L500 680L730 680"/>
+<path style="--d:2s;" pathLength="3333" clip-path="url(#z52c2)" d="M600 206L600 810"/>
 </svg>

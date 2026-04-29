@@ -1,12 +1,10 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
-Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
-You can redistribute and/or modify these files under the terms of the GNU
-Lesser General Public License as published by the Free Software Foundation,
-either version 3 of the license, or (at your option) any later version. You
-should have received a copy of this license (the file "licenses/LGPL.txt") along with
-these files; if not, see https://www.gnu.org/licenses/.
+Glyph outlines derived from Arphic PL KaitiM GB font.
+You can redistribute and/or modify this file under the terms of the Arphic Public License
+as published by Arphic Technology Co., Ltd.
+You should have received a copy of this license along with this file.
+If not, see https://ftp.gnu.org/non-gnu/chinese-fonts-truetype/LICENSE.
 -->
 <svg id="z51" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 <style>
@@ -29,9 +27,9 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z51d1" d="M681 275Q681 334 648 369Q616 403 560 415L560 418Q630 426 665 462Q699 498 699 556Q699 607 675 646Q652 686 602 708Q553 730 475 730Q430 730 390 723Q351 716 315 698L315 631Q352 649 394 659Q437 670 476 670Q554 670 589 639Q624 608 624 554Q624 500 581 476Q538 452 461 452L404 452L404 390L461 390Q533 390 570 360Q608 330 608 280Q608 238 579 214Q550 191 501 191Q454 191 421 205Q387 219 354 240L319 191Q350 167 396 149Q442 131 501 131Q592 131 636 172Q681 212 681 275Z"/>
+<path id="z51d1" d="M716 666Q716 555 616 520Q595 513 576 508Q588 501 604 493Q695 447 696 354Q696 288 642 238Q599 198 516 197L516 196Q515 196 516 197Q512 196 511 197Q438 197 389 240Q331 286 330 348Q330 372 346 389Q362 405 381 405Q403 405 417 389Q430 373 431 348Q428 329 415 312Q405 296 430 264Q460 233 515 225Q554 225 585 255Q619 288 620 354Q620 424 579 464Q546 495 526 500Q508 499 499 494Q484 487 471 487Q443 487 442 514Q442 542 471 543Q481 543 495 535Q507 528 521 528Q567 528 603 559Q640 595 640 666Q640 741 604 771Q561 804 519 806Q464 797 428 774Q388 746 391 729Q392 716 400 706Q407 697 409 685Q409 660 394 645Q379 630 362 630Q340 630 324 645Q308 661 308 685Q308 740 362 785Q422 831 519 834Q598 833 655 792Q716 743 716 666Z"/>
 <defs>
 	<clipPath id="z51c1"><use href="#z51d1"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z51c1)" d="M340 220L410 170L500 145L570 170L620 210L650 260L640 320L600 360L540 390L480 410L540 430L600 470L640 520L660 560L640 620L600 660L540 690L480 705L410 705L340 680"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z51c1)" d="M360 300L420 240L500 210L560 230L620 270L660 340L630 430L570 470L520 500L490 510L540 520L610 550L660 610L660 670L630 740L570 790L510 810L440 800L380 760L330 700"/>
 </svg>

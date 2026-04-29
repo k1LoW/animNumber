@@ -1,12 +1,10 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
-Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
-You can redistribute and/or modify these files under the terms of the GNU
-Lesser General Public License as published by the Free Software Foundation,
-either version 3 of the license, or (at your option) any later version. You
-should have received a copy of this license (the file "licenses/LGPL.txt") along with
-these files; if not, see https://www.gnu.org/licenses/.
+Glyph outlines derived from Arphic PL KaitiM GB font.
+You can redistribute and/or modify this file under the terms of the Arphic Public License
+as published by Arphic Technology Co., Ltd.
+You should have received a copy of this license along with this file.
+If not, see https://ftp.gnu.org/non-gnu/chinese-fonts-truetype/LICENSE.
 -->
 <svg id="z55" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 <style>
@@ -29,9 +27,9 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z55d1" d="M390 722L629 204L314 204L314 139L705 139L705 194L469 722Z"/>
+<path id="z55d1" d="M718 216L362 216L306 410L329 417Q377 314 421 292Q472 267 563 266L668 266Q530 441 477 556Q426 673 426 774Q426 811 436 826Q448 841 469 841Q488 841 501 825Q513 809 513 774Q513 614 554 507Q600 396 718 244Z"/>
 <defs>
 	<clipPath id="z55c1"><use href="#z55d1"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z55c1)" d="M340 170L470 150L600 150L700 160L580 380L490 570L420 722"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z55c1)" d="M330 310L450 240L570 240L700 240L580 430L510 590L470 740L470 830"/>
 </svg>
