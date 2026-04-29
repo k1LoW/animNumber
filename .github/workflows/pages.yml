@@ -34,7 +34,7 @@ jobs:
 
       - run: go run main.go
 
-      - run: cp -r svgsNumber demo/public/svgsNumber
+      - run: mkdir -p demo/public && cp -r svgsNumber demo/public/svgsNumber
 
       - uses: actions/setup-node@v4
         with:
