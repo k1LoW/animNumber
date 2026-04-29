@@ -1,0 +1,38 @@
+<!--
+animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
+You can redistribute and/or modify these files under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation,
+either version 3 of the license, or (at your option) any later version. You
+should have received a copy of this license (the file "licenses/LGPL.txt") along with
+these files; if not, see https://www.gnu.org/licenses/.
+-->
+<svg id="z56" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z56d1" d="M511 71L579 83L652 117L705 171L730 243L721 316L683 379L627 422L561 448L500 455L439 448L373 422L317 379L279 316L270 243L295 171L348 117L421 83L489 71ZM489 199L511 199L459 207L422 223L405 239L400 257L401 274L413 291L437 308L471 322L500 325L529 322L563 308L587 291L599 274L600 257L595 239L578 223L541 207Z"/>
+<path id="z56d2" d="M510 336L585 348L665 388L722 453L745 528L738 613L701 685L644 735L575 763L500 770L425 763L356 735L299 685L262 613L255 528L278 453L335 388L415 348L490 336ZM490 464L510 464L455 472L415 492L392 517L385 542L388 577L401 605L424 625L455 637L500 640L545 637L576 625L599 605L612 577L615 542L608 517L585 492L545 472Z"/>
+<defs>
+	<clipPath id="z56c1"><use href="#z56d1"/></clipPath>
+	<clipPath id="z56c2"><use href="#z56d2"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z56c1)" d="M500 135L560 145L615 170L650 205L665 250L660 295L635 335L595 365L545 385L500 390L455 385L405 365L365 335L340 295L335 250L350 205L385 170L440 145L500 135"/>
+<path style="--d:2s;" pathLength="3333" clip-path="url(#z56c2)" d="M500 400L565 410L625 440L665 485L680 535L675 595L650 645L610 680L560 700L500 705L440 700L390 680L350 645L325 595L320 535L335 485L375 440L435 410L500 400"/>
+</svg>

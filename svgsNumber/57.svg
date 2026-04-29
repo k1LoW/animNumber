@@ -1,0 +1,35 @@
+<!--
+animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
+You can redistribute and/or modify these files under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation,
+either version 3 of the license, or (at your option) any later version. You
+should have received a copy of this license (the file "licenses/LGPL.txt") along with
+these files; if not, see https://www.gnu.org/licenses/.
+-->
+<svg id="z57" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z57d1" d="M515 326L548 287L560 247L559 213L551 199L532 194L496 194L464 203L453 215L450 238L458 269L474 291L499 303L534 305L627 313L639 448L617 535L586 625L553 706L520 761C500 794 457 805 424 785C391 765 380 722 400 689L427 644L454 575L483 495L501 422L533 417L546 445L461 437L386 399L332 331L310 242L327 155L386 87L474 56L558 56L639 91L691 167L700 263L672 353L625 414C601 444 556 449 526 425C496 401 491 356 515 326Z"/>
+<defs>
+	<clipPath id="z57c1"><use href="#z57d1"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z57c1)" d="M570 370L610 320L630 255L625 190L595 145L545 125L485 125L425 145L390 185L380 240L395 300L430 345L480 370L540 375L580 365L570 435L550 515L520 600L490 675L460 725"/>
+</svg>

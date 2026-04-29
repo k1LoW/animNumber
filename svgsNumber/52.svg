@@ -1,0 +1,38 @@
+<!--
+animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
+You can redistribute and/or modify these files under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation,
+either version 3 of the license, or (at your option) any later version. You
+should have received a copy of this license (the file "licenses/LGPL.txt") along with
+these files; if not, see https://www.gnu.org/licenses/.
+-->
+<svg id="z52" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z52d1" d="M468 146L438 276L408 407L376 418L420 390L540 390L680 390C719 390 750 421 750 460C750 499 719 530 680 530L540 530L420 530L264 502L272 373L302 244L332 114C340 77 378 53 416 62C453 70 477 108 468 146Z"/>
+<path id="z52d2" d="M630 130L630 720C630 759 599 790 560 790C521 790 490 759 490 720L490 130C490 91 521 60 560 60C599 60 630 91 630 130Z"/>
+<defs>
+	<clipPath id="z52c1"><use href="#z52d1"/></clipPath>
+	<clipPath id="z52c2"><use href="#z52d2"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z52c1)" d="M400 130L370 260L340 390L320 460L420 460L540 460L680 460"/>
+<path style="--d:2s;" pathLength="3333" clip-path="url(#z52c2)" d="M560 130L560 720"/>
+</svg>

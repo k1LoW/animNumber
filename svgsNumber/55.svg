@@ -1,0 +1,35 @@
+<!--
+animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
+You can redistribute and/or modify these files under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation,
+either version 3 of the license, or (at your option) any later version. You
+should have received a copy of this license (the file "licenses/LGPL.txt") along with
+these files; if not, see https://www.gnu.org/licenses/.
+-->
+<svg id="z55" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z55d1" d="M300 60L400 60L500 60L600 60L747 89L706 304L645 457L584 598L524 729C507 764 466 780 431 764C396 747 380 706 396 671L456 542L515 403L574 256L633 171L600 200L500 200L400 200L300 200C261 200 230 169 230 130C230 91 261 60 300 60Z"/>
+<defs>
+	<clipPath id="z55c1"><use href="#z55d1"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z55c1)" d="M300 130L400 130L500 130L600 130L690 130L640 280L580 430L520 570L460 700"/>
+</svg>

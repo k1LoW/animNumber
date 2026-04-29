@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>animNumber Preview</title>
+<style>
+body {
+  font-family: sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+h1 { text-align: center; }
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+.digit {
+  text-align: center;
+}
+.digit h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.2em;
+}
+.digit svg {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #eee;
+}
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 8px 24px;
+  font-size: 1em;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<h1>animNumber Preview</h1>
+<button onclick="replay()">Replay</button>
+<div class="container" id="container"></div>
+<script>
+const container = document.getElementById('container');
+const digits = [];
+for (let i = 0; i <= 9; i++) {
+  const code = 48 + i;
+  digits.push({ char: String.fromCharCode(code), file: `svgsNumber/${code}.svg` });
+}
+
+function loadAll() {
+  container.innerHTML = '';
+  digits.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'digit';
+    div.innerHTML = `<h2>${d.char}</h2>`;
+    const obj = document.createElement('object');
+    obj.type = 'image/svg+xml';
+    obj.data = d.file + '?t=' + Date.now();
+    obj.width = '200';
+    obj.height = '200';
+    div.appendChild(obj);
+    container.appendChild(div);
+  });
+}
+
+function replay() {
+  loadAll();
+}
+
+loadAll();
+</script>
+</body>
+</html>
