@@ -1,5 +1,7 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
+Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
+Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
 You can redistribute and/or modify these files under the terms of the GNU
 Lesser General Public License as published by the Free Software Foundation,
 either version 3 of the license, or (at your option) any later version. You
@@ -27,9 +29,9 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z50d1" d="M247 219L286 145L372 81L480 60L584 79L667 128L721 206L729 299L702 378L653 445L589 510L519 575L453 641L415 690L397 667L398 640L482 645L578 645L677 640C715 638 748 668 750 707C752 745 722 778 683 780L582 785L478 785L382 780L273 733L295 620L347 549L421 475L491 410L547 355L578 312L591 281L589 254L573 232L536 211L480 200L428 209L394 235L373 281C355 316 313 330 279 313C244 295 230 253 247 219Z"/>
+<path id="z50d1" d="M703 722L318 722L318 662L470 508Q514 464 545 430Q575 395 590 362Q606 329 606 290Q606 242 577 217Q549 192 503 192Q461 192 428 207Q396 221 363 248L324 199Q359 171 403 151Q448 131 503 131Q585 131 632 172Q679 213 679 286Q679 332 661 372Q642 412 608 450Q575 489 530 533L408 653L408 657L703 657Z"/>
 <defs>
 	<clipPath id="z50c1"><use href="#z50d1"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z50c1)" d="M310 250L340 190L400 145L480 130L560 145L620 180L655 230L660 290L640 345L600 400L540 460L470 525L400 595L355 655L335 700L390 710L480 715L580 715L680 710"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z50c1)" d="M350 220L410 170L500 145L570 160L630 200L660 250L660 290L640 340L600 400L540 470L470 540L400 620L370 675L450 695L570 695L700 690"/>
 </svg>

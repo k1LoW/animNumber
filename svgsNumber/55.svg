@@ -1,5 +1,7 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
+Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
+Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
 You can redistribute and/or modify these files under the terms of the GNU
 Lesser General Public License as published by the Free Software Foundation,
 either version 3 of the license, or (at your option) any later version. You
@@ -27,9 +29,9 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z55d1" d="M300 60L400 60L500 60L600 60L747 89L706 304L645 457L584 598L524 729C507 764 466 780 431 764C396 747 380 706 396 671L456 542L515 403L574 256L633 171L600 200L500 200L400 200L300 200C261 200 230 169 230 130C230 91 261 60 300 60Z"/>
+<path id="z55d1" d="M390 722L629 204L314 204L314 139L705 139L705 194L469 722Z"/>
 <defs>
 	<clipPath id="z55c1"><use href="#z55d1"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z55c1)" d="M300 130L400 130L500 130L600 130L690 130L640 280L580 430L520 570L460 700"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z55c1)" d="M340 170L470 150L600 150L700 160L580 380L490 570L420 722"/>
 </svg>

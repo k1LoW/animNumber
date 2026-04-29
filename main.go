@@ -13,250 +13,117 @@ import (
 
 type Point struct{ X, Y float64 }
 
-type StrokeDef struct {
-	Median    []Point
-	HalfWidth float64
-	Closed    bool
-}
-
 type DigitDef struct {
 	Char    rune
-	Strokes []StrokeDef
+	Outline string    // Font-derived glyph outline (graphics coords, y-up)
+	Medians [][]Point // One median per stroke
 }
 
 type GraphicsEntry struct {
-	Character string       `json:"character"`
-	Strokes   []string     `json:"strokes"`
-	Medians   [][][2]int   `json:"medians"`
+	Character string     `json:"character"`
+	Strokes   []string   `json:"strokes"`
+	Medians   [][][2]int `json:"medians"`
 }
 
 const (
-	defaultHW    = 70.0
-	kBezier      = 0.5522847498
 	outDir       = "svgsNumber"
 	graphicsFile = "graphicsNumber.txt"
 )
 
+// Glyph outlines extracted from Noto Sans Regular (Apache 2.0 license).
+// Source: https://github.com/notofonts/latin-greek-cyrillic
+// Coordinate system: animCJK graphics (x 0-1024, y 0-900, y-up).
+// Transform: scale=600/735, center_x=512, baseline_y=178.
 var digits = []DigitDef{
-	{Char: '0', Strokes: []StrokeDef{{Closed: true, HalfWidth: defaultHW, Median: []Point{
-		{500, 780}, {560, 770}, {620, 740}, {660, 700}, {690, 640},
-		{710, 570}, {710, 490}, {700, 410}, {680, 340}, {640, 280},
-		{600, 240}, {550, 215}, {500, 210}, {450, 215}, {400, 240},
-		{360, 280}, {320, 340}, {300, 410}, {290, 490}, {290, 570},
-		{310, 640}, {340, 700}, {380, 740}, {440, 770}, {500, 780},
-	}}}},
-	{Char: '1', Strokes: []StrokeDef{{HalfWidth: defaultHW, Median: []Point{
-		{420, 700}, {460, 735}, {500, 770}, {500, 180},
-	}}}},
-	{Char: '2', Strokes: []StrokeDef{{HalfWidth: defaultHW, Median: []Point{
-		{310, 650}, {340, 710}, {400, 755}, {480, 770}, {560, 755},
-		{620, 720}, {655, 670}, {660, 610}, {640, 555}, {600, 500},
-		{540, 440}, {470, 375}, {400, 305}, {355, 245}, {335, 200},
-		{390, 190}, {480, 185}, {580, 185}, {680, 190},
-	}}}},
-	{Char: '3', Strokes: []StrokeDef{{HalfWidth: defaultHW, Median: []Point{
-		{310, 720}, {370, 760}, {450, 775}, {540, 765}, {610, 730},
-		{650, 680}, {660, 625}, {640, 575}, {600, 535}, {540, 505},
-		{490, 495},
-		{540, 475}, {600, 440}, {645, 390}, {660, 335}, {655, 275},
-		{625, 225}, {575, 195}, {510, 180}, {440, 185}, {370, 205},
-	}}}},
-	{Char: '4', Strokes: []StrokeDef{
-		{HalfWidth: defaultHW, Median: []Point{
-			{400, 770}, {370, 640}, {340, 510}, {320, 440}, {420, 440},
-			{540, 440}, {680, 440},
+	{Char: '0',
+		Outline: "M705,470Q705,377 686,309Q666,242 624,206Q581,170 511,170Q412,170 365,250Q319,329 319,470Q319,565 338,632Q357,699 399,734Q442,770 511,770Q609,770 657,691Q705,612 705,470ZM390,470Q390,350 418,291Q445,231 511,231Q576,231 605,290Q633,350 633,470Q633,590 605,649Q576,709 511,709Q445,709 418,649Q390,590 390,470Z",
+		Medians: [][]Point{
+			{{511, 740}, {580, 720}, {640, 660}, {670, 570}, {670, 470},
+				{670, 370}, {640, 280}, {580, 220}, {511, 200},
+				{440, 220}, {380, 280}, {350, 370}, {350, 470},
+				{350, 570}, {380, 660}, {440, 720}, {511, 740}},
 		}},
-		{HalfWidth: defaultHW, Median: []Point{
-			{560, 770}, {560, 180},
+	{Char: '1',
+		Outline: "M568,178L498,178L498,586Q498,621 499,642Q500,663 501,686Q488,673 478,664Q467,655 451,641L389,590L351,639L509,761L568,761Z",
+		Medians: [][]Point{
+			{{380, 610}, {450, 680}, {533, 755}, {533, 178}},
 		}},
-	}},
-	{Char: '5', Strokes: []StrokeDef{
-		{HalfWidth: defaultHW, Median: []Point{
-			{640, 770}, {530, 770}, {420, 770}, {350, 770},
+	{Char: '2',
+		Outline: "M703,178L318,178L318,238L470,392Q514,436 545,470Q575,505 590,538Q606,571 606,610Q606,658 577,683Q549,708 503,708Q461,708 428,693Q396,679 363,652L324,701Q359,729 403,749Q448,769 503,769Q585,769 632,728Q679,687 679,614Q679,568 661,528Q642,488 608,450Q575,411 530,367L408,247L408,243L703,243Z",
+		Medians: [][]Point{
+			{{350, 680}, {410, 730}, {500, 755}, {570, 740},
+				{630, 700}, {660, 650}, {660, 610}, {640, 560},
+				{600, 500}, {540, 430}, {470, 360}, {400, 280},
+				{370, 225}, {450, 205}, {570, 205}, {700, 210}},
 		}},
-		{HalfWidth: defaultHW, Median: []Point{
-			{360, 770}, {345, 650}, {340, 560}, {355, 485}, {400, 425},
-			{465, 395}, {540, 385}, {615, 400}, {660, 445},
-			{675, 370}, {660, 285}, {615, 225}, {555, 195},
-			{480, 180}, {405, 195}, {350, 230},
+	{Char: '3',
+		Outline: "M681,625Q681,566 648,531Q616,497 560,485L560,482Q630,474 665,438Q699,402 699,344Q699,293 675,254Q652,214 602,192Q553,170 475,170Q430,170 390,177Q351,184 315,202L315,269Q352,251 394,241Q437,230 476,230Q554,230 589,261Q624,292 624,346Q624,400 581,424Q538,448 461,448L404,448L404,510L461,510Q533,510 570,540Q608,570 608,620Q608,662 579,686Q550,709 501,709Q454,709 421,695Q387,681 354,660L319,709Q350,733 396,751Q442,769 501,769Q592,769 636,728Q681,688 681,625Z",
+		Medians: [][]Point{
+			{{340, 680}, {410, 730}, {500, 755}, {570, 730},
+				{620, 690}, {650, 640}, {640, 580}, {600, 540},
+				{540, 510}, {480, 490},
+				{540, 470}, {600, 430}, {640, 380}, {660, 340},
+				{640, 280}, {600, 240}, {540, 210}, {480, 195},
+				{410, 195}, {340, 220}},
 		}},
-	}},
-	{Char: '6', Strokes: []StrokeDef{{HalfWidth: defaultHW, Median: []Point{
-		{620, 770}, {560, 700}, {490, 610}, {430, 510}, {385, 410},
-		{365, 310}, {375, 230}, {415, 185}, {475, 170}, {545, 180},
-		{610, 220}, {650, 285}, {660, 365}, {635, 440}, {585, 485},
-		{520, 500}, {455, 485}, {405, 435}, {380, 370},
-	}}}},
-	{Char: '7', Strokes: []StrokeDef{{HalfWidth: defaultHW, Median: []Point{
-		{300, 770}, {400, 770}, {500, 770}, {600, 770}, {690, 770},
-		{640, 620}, {580, 470}, {520, 330}, {460, 200},
-	}}}},
-	{Char: '8', Strokes: []StrokeDef{
-		{Closed: true, HalfWidth: 65.0, Median: []Point{
-			{500, 765}, {560, 755}, {615, 730}, {650, 695}, {665, 650},
-			{660, 605}, {635, 565}, {595, 535}, {545, 515}, {500, 510},
-			{455, 515}, {405, 535}, {365, 565}, {340, 605}, {335, 650},
-			{350, 695}, {385, 730}, {440, 755}, {500, 765},
+	{Char: '4',
+		Outline: "M729,310L644,310L644,178L575,178L575,310L296,310L296,372L570,764L644,764L644,375L729,375ZM575,559Q575,601 576,631Q578,661 579,688L576,688Q569,672 559,654Q550,636 541,624L366,375L575,375Z",
+		Medians: [][]Point{
+			// Stroke 1: diagonal down then horizontal
+			{{580, 750}, {460, 550}, {360, 370}, {530, 345}, {700, 345}},
+			// Stroke 2: vertical
+			{{610, 755}, {610, 178}},
 		}},
-		{Closed: true, HalfWidth: 65.0, Median: []Point{
-			{500, 500}, {565, 490}, {625, 460}, {665, 415}, {680, 365},
-			{675, 305}, {650, 255}, {610, 220}, {560, 200}, {500, 195},
-			{440, 200}, {390, 220}, {350, 255}, {325, 305}, {320, 365},
-			{335, 415}, {375, 460}, {435, 490}, {500, 500},
+	{Char: '5',
+		Outline: "M503,536Q593,536 646,491Q699,446 699,364Q699,274 641,222Q584,170 481,170Q436,170 396,178Q357,186 330,202L330,270Q359,252 401,241Q443,231 482,231Q546,231 586,262Q625,292 625,357Q625,414 590,445Q555,475 479,475Q456,475 427,471Q398,467 380,463L344,486L366,761L658,761L658,696L427,696L413,527Q427,529 451,532Q474,536 503,536Z",
+		Medians: [][]Point{
+			// Stroke 1: horizontal at top
+			{{640, 740}, {530, 730}, {410, 700}},
+			// Stroke 2: down then curve
+			{{410, 700}, {400, 580}, {420, 510},
+				{480, 500}, {540, 510}, {600, 465},
+				{640, 390}, {630, 300}, {580, 240},
+				{500, 200}, {420, 210}, {355, 240}},
 		}},
-	}},
-	{Char: '9', Strokes: []StrokeDef{{HalfWidth: defaultHW, Median: []Point{
-		{570, 530}, {610, 580}, {630, 645}, {625, 710}, {595, 755},
-		{545, 775}, {485, 775}, {425, 755}, {390, 715}, {380, 660},
-		{395, 600}, {430, 555}, {480, 530}, {540, 525}, {580, 535},
-		{570, 465}, {550, 385}, {520, 300}, {490, 225}, {460, 175},
-	}}}},
-}
-
-// --- Vector math ---
-
-func sub(a, b Point) Point   { return Point{a.X - b.X, a.Y - b.Y} }
-func add(a, b Point) Point   { return Point{a.X + b.X, a.Y + b.Y} }
-func scale(p Point, s float64) Point { return Point{p.X * s, p.Y * s} }
-
-func length(p Point) float64 {
-	return math.Sqrt(p.X*p.X + p.Y*p.Y)
-}
-
-func normalize(p Point) Point {
-	l := length(p)
-	if l < 1e-9 {
-		return Point{0, 0}
-	}
-	return Point{p.X / l, p.Y / l}
-}
-
-func perpLeft(p Point) Point { return Point{-p.Y, p.X} }
-
-// --- Normal computation ---
-
-func computeNormals(points []Point, closed bool) []Point {
-	n := len(points)
-	normals := make([]Point, n)
-	for i := 0; i < n; i++ {
-		var tangent Point
-		if closed {
-			prev := (i - 1 + n) % n
-			next := (i + 1) % n
-			t1 := normalize(sub(points[i], points[prev]))
-			t2 := normalize(sub(points[next], points[i]))
-			tangent = normalize(add(t1, t2))
-		} else if i == 0 {
-			tangent = normalize(sub(points[1], points[0]))
-		} else if i == n-1 {
-			tangent = normalize(sub(points[n-1], points[n-2]))
-		} else {
-			t1 := normalize(sub(points[i], points[i-1]))
-			t2 := normalize(sub(points[i+1], points[i]))
-			tangent = normalize(add(t1, t2))
-		}
-		normals[i] = perpLeft(tangent)
-	}
-	return normals
-}
-
-// --- Outline generation ---
-
-func fmtCoord(x, y float64) string {
-	return fmt.Sprintf("%d,%d", int(math.Round(x)), int(math.Round(y)))
-}
-
-func expandToOutline(s StrokeDef) string {
-	points := s.Median
-	hw := s.HalfWidth
-	n := len(points)
-	if n < 2 {
-		return ""
-	}
-
-	normals := computeNormals(points, s.Closed)
-
-	left := make([]Point, n)
-	right := make([]Point, n)
-	for i := range points {
-		left[i] = add(points[i], scale(normals[i], hw))
-		right[i] = add(points[i], scale(normals[i], -hw))
-	}
-
-	if s.Closed {
-		return buildClosedOutline(left, right, n)
-	}
-	return buildOpenOutline(left, right, points, normals, hw, n)
-}
-
-func buildClosedOutline(left, right []Point, n int) string {
-	var sb strings.Builder
-
-	// Outer ring (same direction as median)
-	// Skip last point if it duplicates the first (closed loop)
-	count := n
-	if length(sub(left[0], left[n-1])) < 5 {
-		count = n - 1
-	}
-	sb.WriteString("M" + fmtCoord(left[0].X, left[0].Y))
-	for i := 1; i < count; i++ {
-		sb.WriteString("L" + fmtCoord(left[i].X, left[i].Y))
-	}
-	sb.WriteString("Z")
-
-	// Inner ring (reverse direction for hole)
-	sb.WriteString("M" + fmtCoord(right[0].X, right[0].Y))
-	for i := count - 1; i >= 1; i-- {
-		sb.WriteString("L" + fmtCoord(right[i].X, right[i].Y))
-	}
-	sb.WriteString("Z")
-
-	return sb.String()
-}
-
-func buildOpenOutline(left, right []Point, median []Point, normals []Point, hw float64, n int) string {
-	var sb strings.Builder
-
-	// Tangent directions at start and end
-	tangentStart := normalize(sub(median[1], median[0]))
-	tangentEnd := normalize(sub(median[n-1], median[n-2]))
-	normalStart := normals[0]
-	normalEnd := normals[n-1]
-
-	// Start at left[0]
-	sb.WriteString("M" + fmtCoord(left[0].X, left[0].Y))
-
-	// Forward along left side
-	for i := 1; i < n; i++ {
-		sb.WriteString("L" + fmtCoord(left[i].X, left[i].Y))
-	}
-
-	// End cap: semicircle from left[n-1] to right[n-1]
-	fwd := add(median[n-1], scale(tangentEnd, hw))
-	cp1 := add(left[n-1], scale(tangentEnd, kBezier*hw))
-	cp2 := add(fwd, scale(normalEnd, kBezier*hw))
-	sb.WriteString("C" + fmtCoord(cp1.X, cp1.Y) + " " + fmtCoord(cp2.X, cp2.Y) + " " + fmtCoord(fwd.X, fwd.Y))
-	cp1 = add(fwd, scale(normalEnd, -kBezier*hw))
-	cp2 = add(right[n-1], scale(tangentEnd, kBezier*hw))
-	sb.WriteString("C" + fmtCoord(cp1.X, cp1.Y) + " " + fmtCoord(cp2.X, cp2.Y) + " " + fmtCoord(right[n-1].X, right[n-1].Y))
-
-	// Backward along right side
-	for i := n - 2; i >= 0; i-- {
-		sb.WriteString("L" + fmtCoord(right[i].X, right[i].Y))
-	}
-
-	// Start cap: semicircle from right[0] to left[0]
-	backDir := scale(tangentStart, -1)
-	back := add(median[0], scale(backDir, hw))
-	cp1 = add(right[0], scale(backDir, kBezier*hw))
-	cp2 = add(back, scale(normalStart, -kBezier*hw))
-	sb.WriteString("C" + fmtCoord(cp1.X, cp1.Y) + " " + fmtCoord(cp2.X, cp2.Y) + " " + fmtCoord(back.X, back.Y))
-	cp1 = add(back, scale(normalStart, kBezier*hw))
-	cp2 = add(left[0], scale(backDir, kBezier*hw))
-	sb.WriteString("C" + fmtCoord(cp1.X, cp1.Y) + " " + fmtCoord(cp2.X, cp2.Y) + " " + fmtCoord(left[0].X, left[0].Y))
-
-	sb.WriteString("Z")
-	return sb.String()
+	{Char: '6',
+		Outline: "M323,427Q323,490 334,551Q345,612 374,661Q403,710 456,740Q508,769 590,769Q608,769 628,768Q649,766 662,762L662,701Q648,706 629,708Q611,710 592,710Q536,710 498,692Q461,673 439,640Q417,608 408,565Q398,523 395,474L400,474Q419,503 452,523Q486,543 538,543Q614,543 661,497Q707,451 707,366Q707,274 657,222Q607,170 522,170Q466,170 421,198Q376,226 350,283Q323,340 323,427ZM521,230Q572,230 604,263Q636,297 636,366Q636,421 608,454Q580,487 523,487Q485,487 456,471Q428,455 412,430Q396,406 396,380Q396,345 410,310Q424,275 452,253Q479,230 521,230Z",
+		Medians: [][]Point{
+			{{610, 750}, {540, 720}, {470, 680}, {430, 630},
+				{405, 560}, {380, 470}, {350, 370}, {365, 280},
+				{410, 220}, {480, 195}, {550, 200}, {610, 240},
+				{650, 310}, {660, 380}, {640, 450}, {590, 490},
+				{520, 510}, {450, 480}, {410, 420}, {395, 360}},
+		}},
+	{Char: '7',
+		Outline: "M390,178L629,696L314,696L314,761L705,761L705,706L469,178Z",
+		Medians: [][]Point{
+			{{340, 730}, {470, 750}, {600, 750}, {700, 740},
+				{580, 520}, {490, 330}, {420, 178}},
+		}},
+	{Char: '8',
+		Outline: "M511,769Q588,769 637,733Q686,697 686,630Q686,594 671,568Q656,542 630,522Q605,502 575,487Q611,470 640,448Q670,426 687,398Q705,369 705,329Q705,256 653,213Q601,170 514,170Q420,170 369,211Q319,252 319,327Q319,367 335,396Q352,426 380,447Q408,468 439,483Q397,507 367,542Q337,577 337,630Q337,675 360,706Q383,737 422,753Q461,769 511,769ZM510,711Q465,711 436,690Q408,668 408,627Q408,597 422,577Q436,556 461,542Q485,528 514,514Q557,532 586,558Q615,583 615,627Q615,668 586,690Q558,711 510,711ZM389,326Q389,283 419,255Q449,227 512,227Q572,227 603,255Q634,283 634,328Q634,371 601,399Q568,427 512,448L499,453Q445,430 417,401Q389,371 389,326Z",
+		Medians: [][]Point{
+			{{511, 490}, {430, 530}, {370, 580}, {360, 640},
+				{390, 700}, {450, 740}, {511, 755},
+				{570, 740}, {640, 700}, {660, 640},
+				{650, 580}, {590, 530}, {511, 490},
+				{440, 450}, {380, 390}, {360, 330},
+				{380, 260}, {440, 220}, {511, 195},
+				{580, 220}, {640, 270}, {660, 340},
+				{640, 410}, {580, 460}, {511, 490}},
+		}},
+	{Char: '9',
+		Outline: "M703,512Q703,449 692,388Q681,328 652,278Q623,229 570,199Q518,170 435,170Q419,170 397,172Q376,174 362,178L362,239Q394,229 434,229Q491,229 528,248Q565,266 587,299Q609,331 619,374Q629,417 630,464L625,464Q608,436 574,416Q540,396 487,396Q412,396 365,442Q319,488 319,572Q319,634 343,678Q366,722 408,746Q449,769 505,769Q561,769 606,741Q651,713 677,656Q703,599 703,512ZM505,709Q455,709 423,675Q390,642 390,573Q390,517 418,485Q445,452 502,452Q541,452 570,468Q599,484 614,509Q630,533 630,559Q630,594 616,629Q603,663 575,686Q547,709 505,709Z",
+		Medians: [][]Point{
+			{{380, 210}, {440, 195}, {510, 195},
+				{580, 220}, {630, 270}, {670, 350},
+				{690, 440}, {690, 520}, {660, 620},
+				{610, 700}, {550, 740}, {480, 750},
+				{420, 730}, {380, 680}, {365, 610},
+				{380, 530}, {420, 470}, {490, 440},
+				{560, 445}, {620, 490}, {650, 540},
+				{640, 420}, {610, 310}, {570, 240}},
+		}},
 }
 
 // --- Coordinate transform (graphics -> SVG) ---
@@ -264,12 +131,9 @@ func buildOpenOutline(left, right []Point, median []Point, normals []Point, hw f
 var reTransform = regexp.MustCompile(`([MQCLZ ]+)([0-9.-]+) ([0-9.-]+)`)
 
 func transformPath(path string) string {
-	// Normalize: commas to spaces
 	path = strings.ReplaceAll(path, ",", " ")
-	// Remove spaces around commands
 	re1 := regexp.MustCompile(`\s?([MQCLZ])\s?`)
 	path = re1.ReplaceAllString(path, "$1")
-	// Add space before negative numbers
 	re2 := regexp.MustCompile(`([^ ])-`)
 	path = re2.ReplaceAllString(path, "$1 -")
 
@@ -285,7 +149,6 @@ func transformPath(path string) string {
 		return m[1] + strconv.Itoa(x) + " " + strconv.Itoa(y)
 	})
 
-	// Re-add Z if it was lost
 	if hasZ && !strings.Contains(result, "Z") {
 		result += "Z"
 	}
@@ -345,14 +208,12 @@ func buildSVG(entry GraphicsEntry) string {
 	sb.WriteString("\n")
 	sb.WriteString(svgStyle)
 
-	// Stroke shapes
 	for i, stroke := range entry.Strokes {
 		transformed := transformPath(stroke)
 		sb.WriteString(fmt.Sprintf(`<path id="%sd%d" d="%s"/>`, id, i+1, transformed))
 		sb.WriteString("\n")
 	}
 
-	// Clip paths
 	sb.WriteString("<defs>\n")
 	for i := range entry.Strokes {
 		sb.WriteString(fmt.Sprintf("\t"+`<clipPath id="%sc%d"><use href="#%sd%d"/></clipPath>`, id, i+1, id, i+1))
@@ -360,7 +221,6 @@ func buildSVG(entry GraphicsEntry) string {
 	}
 	sb.WriteString("</defs>\n")
 
-	// Median paths
 	for i, median := range entry.Medians {
 		medianPath := buildMedianPath(median)
 		transformedMedian := transformPath(medianPath)
@@ -375,6 +235,8 @@ func buildSVG(entry GraphicsEntry) string {
 func svgComment() string {
 	return `<!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
+Glyph outlines derived from Noto Sans (https://github.com/notofonts/latin-greek-cyrillic)
+Copyright 2022 The Noto Project Authors, licensed under the SIL Open Font License v1.1.
 You can redistribute and/or modify these files under the terms of the GNU
 Lesser General Public License as published by the Free Software Foundation,
 either version 3 of the license, or (at your option) any later version. You
@@ -391,20 +253,18 @@ func main() {
 		entry := GraphicsEntry{
 			Character: string(d.Char),
 		}
-		for _, s := range d.Strokes {
-			outline := expandToOutline(s)
-			entry.Strokes = append(entry.Strokes, outline)
+		for _, median := range d.Medians {
+			entry.Strokes = append(entry.Strokes, d.Outline)
 
-			median := make([][2]int, len(s.Median))
-			for i, p := range s.Median {
-				median[i] = [2]int{int(math.Round(p.X)), int(math.Round(p.Y))}
+			intMedian := make([][2]int, len(median))
+			for i, p := range median {
+				intMedian[i] = [2]int{int(math.Round(p.X)), int(math.Round(p.Y))}
 			}
-			entry.Medians = append(entry.Medians, median)
+			entry.Medians = append(entry.Medians, intMedian)
 		}
 		entries = append(entries, entry)
 	}
 
-	// Write graphicsNumber.txt
 	f, err := os.Create(graphicsFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating %s: %v\n", graphicsFile, err)
@@ -417,7 +277,6 @@ func main() {
 	f.Close()
 	fmt.Printf("Written %s\n", graphicsFile)
 
-	// Write SVG files
 	os.MkdirAll(outDir, 0o755)
 	comment := svgComment()
 	for _, entry := range entries {

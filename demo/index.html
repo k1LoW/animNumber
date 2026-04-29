@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>animNumber demo</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        max-width: 960px;
+        margin: 0 auto;
+        background: #fafafa;
+      }
+      h1 {
+        margin-bottom: 0.5rem;
+      }
+      p.desc {
+        color: #666;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+      }
+      p.desc a { color: #0366d6; }
+      .controls {
+        margin-bottom: 1rem;
+      }
+      button {
+        padding: 6px 16px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #fff;
+      }
+      button:hover { background: #f0f0f0; }
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .cell {
+        text-align: center;
+      }
+      .cell .label {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+      .cell .svg-container {
+        width: 200px;
+        height: 200px;
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 4px;
+      }
+      .cell .svg-container svg {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>animNumber demo</h1>
+    <p class="desc">
+      Animated Arabic numeral SVGs in
+      <a href="https://github.com/parsimonhi/animCJK">animCJK</a> format.
+      Glyph outlines from <a href="https://github.com/notofonts/latin-greek-cyrillic">Noto Sans</a>.
+      <a href="https://github.com/k1LoW/animNumber">Source</a>
+    </p>
+    <div class="controls">
+      <button id="replay-btn">Replay</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
