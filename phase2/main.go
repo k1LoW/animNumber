@@ -145,9 +145,16 @@ var digitMedians = []DigitMedians{
 		}},
 	}},
 	{Char: '7', Phases: []Phase{
+		// 1画目: small downward flag at the upper-left
 		{Number: 1, Parts: []Part{
 			{Letter: "", Median: []Point{
-				{350, 600}, {500, 615}, {660, 630},
+				{336, 645}, {347, 560}, {357, 480},
+			}},
+		}},
+		// 2画目: top horizontal continuing into the diagonal down-left
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{395, 615}, {520, 625}, {660, 625},
 				{580, 450}, {500, 280}, {440, 130}, {420, 80},
 			}},
 		}},
