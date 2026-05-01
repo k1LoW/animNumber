@@ -1,10 +1,8 @@
 <!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived from Arphic PL KaitiM GB font.
-You can redistribute and/or modify this file under the terms of the Arphic Public License
-as published by Arphic Technology Co., Ltd.
-You should have received a copy of this license along with this file.
-If not, see https://ftp.gnu.org/non-gnu/chinese-fonts-truetype/LICENSE.
+Glyph outlines derived from Klee One Regular by Fontworks Inc.
+Klee One is licensed under the SIL Open Font License, Version 1.1.
+See https://openfontlicense.org/ for the license text.
 -->
 <svg id="z48" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 <style>
@@ -27,9 +25,9 @@ svg.acjk path[clip-path] {
 svg.acjk path[id] {fill:#ccc;}
 ]]>
 </style>
-<path id="z48d1" d="M357 306Q306 400 306 527Q306 662 364 746Q422 831 509 834Q600 830 664 732Q719 648 719 517Q719 387 667 290Q616 199 517 197L517 196Q516 196 516 197Q515 196 511 197Q415 197 357 306ZM426 290Q457 226 512 225Q563 225 597 292Q643 386 643 517Q643 659 601 744Q571 802 509 806Q454 802 420 746Q383 682 382 527Q382 380 426 290Z"/>
+<path id="z48d1" d="M421 277Q419 272 414 269Q410 266 404 266Q394 266 380 288Q366 310 353 348Q339 385 330 434Q320 483 320 538Q320 599 331 653Q341 708 363 749Q386 790 422 814Q459 838 512 838Q560 838 596 812Q632 787 656 742Q680 698 692 642Q704 585 704 523Q704 436 684 367Q664 299 624 259Q584 220 523 220Q494 220 468 235Q443 251 421 277ZM509 793Q468 793 441 771Q415 750 399 714Q384 678 378 631Q371 585 371 536Q371 470 386 420Q401 369 424 335Q448 300 473 283Q499 265 519 265Q556 265 581 286Q607 307 622 344Q638 380 645 425Q653 470 653 518Q653 593 637 655Q621 718 589 755Q557 793 509 793Z"/>
 <defs>
 	<clipPath id="z48c1"><use href="#z48d1"/></clipPath>
 </defs>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z48c1)" d="M580 220L512 200L450 220L400 280L370 370L360 500L370 630L400 700L450 760L512 800L570 760L620 700L660 600L670 500L660 370L620 280L580 220"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z48c1)" d="M600 240L512 220L440 240L390 300L360 390L350 520L360 650L390 730L440 790L512 820L580 790L620 730L650 640L660 520L650 390L620 300L600 240"/>
 </svg>
