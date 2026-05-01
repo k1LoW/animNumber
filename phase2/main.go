@@ -121,13 +121,26 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '6', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			{Letter: "", Median: []Point{
-				{560, 660}, {490, 580}, {430, 480}, {380, 380},
-				{340, 290}, {320, 220}, {350, 150},
-				{410, 100}, {490, 80}, {570, 100},
-				{640, 140}, {680, 220}, {680, 290},
-				{640, 370}, {570, 420}, {490, 430}, {410, 410},
-				{370, 380},
+			// Full continuous stroke from upper-right tail, down through the
+			// left side and across the bottom, up the right side, and closing
+			// into the bowl interior. Clipped to c1a (left half + tail), only
+			// the first portion (tail through bottom-mid) is visible.
+			{Letter: "a", Median: []Point{
+				{570, 660}, {490, 580}, {430, 480}, {380, 380},
+				{340, 290}, {320, 220}, {350, 150}, {410, 100},
+				{490, 80}, {570, 100}, {640, 140}, {680, 220},
+				{680, 290}, {640, 370}, {570, 420}, {490, 430},
+				{420, 405}, {390, 380},
+			}},
+			// Off-canvas lead-in sized so b's visible right-bowl portion picks
+			// up exactly when a finishes the visible tail/left arc — producing
+			// the one-stroke illusion. b extends past the closure into the
+			// lower-left of the bowl to cover the descender-bowl junction
+			// where a's stroke alone leaves a gray sliver.
+			{Letter: "b", Median: []Point{
+				{-329, 100}, {570, 100}, {640, 140}, {680, 220},
+				{680, 290}, {640, 370}, {570, 420}, {490, 430},
+				{420, 405}, {390, 380}, {350, 340},
 			}},
 		}},
 	}},
