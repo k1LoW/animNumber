@@ -161,15 +161,29 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '8', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			{Letter: "", Median: []Point{
-				{512, 660}, {430, 640}, {370, 580}, {360, 510},
-				{410, 450}, {490, 410},
-				{570, 370}, {630, 310}, {660, 230},
-				{620, 150}, {550, 100}, {490, 90},
-				{420, 100}, {360, 150}, {340, 230},
-				{370, 320}, {440, 380}, {520, 420},
-				{600, 460}, {650, 520}, {660, 580},
-				{620, 640}, {560, 660}, {512, 660},
+			// Right S traced through the WALL centerline (between outer and
+			// inner) of c1a: upper-right wall, around the top of upper loop
+			// CCW, down the left wall, through waist X-crossing down-right,
+			// down the right wall of lower loop, to bottom-mid (which is in
+			// c1a ∩ c1b overlap). After visible right S, off-canvas to the
+			// left so a stays invisible during b's visible portion.
+			{Letter: "a", Median: []Point{
+				{640, 620}, {610, 650}, {510, 650}, {430, 650}, {400, 620},
+				{370, 560}, {360, 500}, {380, 450}, {420, 420}, {490, 400},
+				{550, 390}, {620, 360}, {660, 300}, {680, 230}, {660, 160},
+				{610, 110}, {490, 80},
+				{-700, 80},
+			}},
+			// Vertical off-canvas lead-in (from far below up to bottom-mid)
+			// so b's visible left-S picks up when a finishes. b traces the
+			// LEFT wall of lower loop UP, through the waist X-crossing
+			// up-right, up to the upper-right tab — all in c1b's wall
+			// centerline.
+			{Letter: "b", Median: []Point{
+				{490, -656}, {490, 80},
+				{440, 80}, {380, 110}, {350, 170}, {340, 230}, {340, 290},
+				{360, 350}, {410, 380}, {460, 410}, {530, 430}, {580, 460},
+				{620, 490}, {660, 510}, {680, 540}, {685, 570},
 			}},
 		}},
 	}},
