@@ -319,7 +319,7 @@ svg.acjk path[id] {fill:#ccc;}
 func svgComment() string {
 	return `<!--
 animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived from Klee One Regular by Fontworks Inc.
+Glyph outlines derived and modified from Klee One Regular by Fontworks Inc.
 Klee One is licensed under the SIL Open Font License, Version 1.1.
 See https://openfontlicense.org/ for the license text.
 -->
