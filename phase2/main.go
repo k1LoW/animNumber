@@ -171,8 +171,9 @@ var idRe = regexp.MustCompile(`^z(\d+)d(\d+)([a-z]*)$`)
 
 // Match <path id="..." d="..."/> from the existing SVG. We deliberately only
 // extract paths with both id and d attributes, ignoring the animated median
-// paths (which use clip-path instead of id).
-var pathRe = regexp.MustCompile(`(?s)<path\s+id="([^"]+)"\s+d="([^"]+?)"\s*/?>`)
+// paths (which use clip-path instead of id). Trailing attributes like
+// style="..." are allowed and discarded; we only need id and d.
+var pathRe = regexp.MustCompile(`(?s)<path\s+id="([^"]+)"\s+d="([^"]+?)"[^>]*/?>`)
 
 type Outline struct {
 	ID    string
