@@ -106,7 +106,7 @@ var digitMedians = []DigitMedians{
 	{Char: '5', Phases: []Phase{
 		{Number: 1, Parts: []Part{
 			{Letter: "", Median: []Point{
-				{670, 640}, {520, 640}, {400, 640},
+				{400, 640}, {520, 640}, {670, 640},
 			}},
 		}},
 		{Number: 2, Parts: []Part{
@@ -115,6 +115,7 @@ var digitMedians = []DigitMedians{
 				{490, 420}, {560, 410}, {620, 380},
 				{660, 320}, {660, 230}, {620, 160},
 				{550, 110}, {460, 100}, {380, 130},
+				{320, 170},
 			}},
 		}},
 	}},
