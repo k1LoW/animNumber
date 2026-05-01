@@ -189,12 +189,37 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '9', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			{Letter: "", Median: []Point{
-				{650, 500}, {630, 580}, {580, 640}, {510, 660},
-				{440, 640}, {380, 580}, {350, 500},
-				{370, 410}, {430, 360}, {510, 350},
-				{580, 380}, {630, 430}, {650, 480},
-				{640, 390}, {620, 280}, {600, 180}, {580, 80},
+			// a: top + left + bottom of bowl (CCW from upper-right around
+			// to the bowl bottom). Followed by an off-canvas extension
+			// (straight down) sized so a's visible portion is ~33% of the
+			// animation (a finishes drawing the bowl bottom before b
+			// starts).
+			{Letter: "a", Median: []Point{
+				{640, 600}, {570, 660}, {490, 670}, {420, 660}, {370, 620},
+				{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
+				{420, 320},
+				{420, -968},
+			}},
+			// b: traces from the bowl bottom going up-right, around the
+			// closure, and continuing all the way up to the upper-right
+			// corner of the digit (where the descender begins). Vertical
+			// off-canvas pre-lead-in from below the canvas keeps b
+			// invisible until a finishes (~33%); horizontal off-canvas
+			// post-trailing keeps b invisible after ~67% so c takes over.
+			{Letter: "b", Median: []Point{
+				{440, -180},
+				{440, 320}, {490, 320}, {530, 350}, {560, 380}, {580, 410},
+				{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
+				{685, 620}, {680, 650},
+				{1237, 650},
+			}},
+			// c: descender from the very top of the digit down to the foot.
+			// Long horizontal off-canvas pre-lead-in keeps c invisible until
+			// ~67% of the animation, exactly when b finishes.
+			{Letter: "c", Median: []Point{
+				{-558, 650},
+				{680, 650}, {665, 580}, {650, 510}, {640, 440}, {625, 380},
+				{615, 310}, {610, 240}, {605, 170}, {595, 100}, {585, 50},
 			}},
 		}},
 	}},
