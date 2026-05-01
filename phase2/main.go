@@ -40,11 +40,25 @@ const outDir = "svgsNumber"
 var digitMedians = []DigitMedians{
 	{Char: '0', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			{Letter: "", Median: []Point{
-				{600, 660}, {512, 680}, {440, 660}, {390, 600},
-				{360, 510}, {350, 380}, {360, 250}, {390, 170},
-				{440, 110}, {512, 80}, {580, 110}, {620, 170},
-				{650, 260}, {660, 380}, {650, 510}, {620, 600}, {600, 660},
+			// Full counterclockwise stroke from top split, down the left, across the
+			// bottom, up the right, and back to top split. Clipped to the left half,
+			// only the left arc portion (first half) is visible.
+			{Letter: "a", Median: []Point{
+				{415, 630}, {380, 580}, {360, 500}, {350, 380},
+				{370, 270}, {410, 180}, {470, 110}, {510, 85},
+				{580, 110}, {620, 170}, {650, 250}, {660, 380},
+				{650, 500}, {620, 600}, {580, 660}, {512, 680},
+				{450, 670}, {415, 630},
+			}},
+			// Off-canvas lead-in (single horizontal segment) sized so b's total
+			// path length matches a's. The final two points trace into the
+			// upper-left wedge of c1b so the stroke covers that thin region
+			// instead of leaving the gray fill exposed.
+			{Letter: "b", Median: []Point{
+				{-101, 85}, {510, 85}, {580, 110}, {620, 170},
+				{650, 250}, {660, 380}, {650, 500}, {620, 600},
+				{580, 660}, {512, 680}, {450, 670}, {425, 625},
+				{405, 555},
 			}},
 		}},
 	}},
