@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>animCJK SVG の仕組み（「あ」を例に）</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    line-height: 1.7;
+    color: #222;
+    background: #fafafa;
+  }
+  h1 { border-bottom: 2px solid #333; padding-bottom: 8px; }
+  h2 { margin-top: 2.5em; border-left: 4px solid #333; padding-left: 12px; }
+  h3 { margin-top: 1.5em; color: #444; }
+  code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.9em;
+  }
+  pre {
+    background: #2d2d2d;
+    color: #eee;
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.85em;
+    line-height: 1.5;
+  }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  .demo {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .demo-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 4px;
+  }
+  .demo-cell {
+    text-align: center;
+  }
+  .demo svg {
+    width: 220px;
+    height: 220px;
+    border: 1px solid #eee;
+    background: #fff;
+  }
+  button {
+    padding: 8px 18px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95em;
+  }
+  button:hover { background: #555; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    background: #fff;
+  }
+  th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+  th { background: #f5f5f5; }
+  .note {
+    background: #fff8dc;
+    border-left: 4px solid #d4a017;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .keyword { color: #ff6b9d; }
+  .attr { color: #88c0d0; }
+  .num { color: #b48ead; }
+  .str { color: #a3be8c; }
+  .comment { color: #6c7178; font-style: italic; }
+  .controls { margin: 16px 0; }
+  .stage {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 6px;
+  }
+
+  /* animCJK base styles (extracted to be controllable) */
+  svg.acjk path[id] { fill: #ccc; }
+  svg.acjk path[clip-path] {
+    --t: 0.8s;
+    animation: zk var(--t) linear forwards var(--d);
+    stroke-dasharray: 3337;
+    stroke-dashoffset: 3339;
+    stroke-width: 128;
+    stroke-linecap: round;
+    fill: none;
+    stroke: #000;
+  }
+  @keyframes zk { to { stroke-dashoffset: 0; } }
+
+  /* Variants for the breakdown */
+  svg.outline-only path[clip-path] { display: none; }
+  svg.median-only path[id] { display: none; }
+  svg.median-only path[clip-path] {
+    clip-path: none !important;
+    stroke: #c00;
+    stroke-width: 4;
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+  svg.no-clip path[clip-path] {
+    clip-path: none !important;
+    stroke: rgba(0, 0, 200, 0.35);
+  }
+  svg.with-median path[clip-path] {
+    stroke: #000;
+  }
+  svg.with-median::after { content: ''; }
+  /* Median highlight on top */
+  svg.dual path[id] { fill: #eee; }
+</style>
+</head>
+<body>
+
+<h1>animCJK SVG の仕組み</h1>
+<p>
+ひらがな「あ」(<code>U+3042</code>) を例に、animCJK が書き順アニメーション SVG をどう構成しているかを見ていきます。
+</p>
+
+<h2>1. 完成した姿</h2>
+<p>まずは完成した SVG をそのまま再生してみましょう。Replay を押すと書き順通りに描かれます。</p>
+
+<div class="controls">
+  <button onclick="replayAll()">▶ Replay</button>
+</div>
+
+<div class="demo">
+  <div class="demo-cell">
+    <div id="full-demo"></div>
+    <div class="demo-label">完成形（3 画）</div>
+  </div>
+</div>
+
+<h2>2. ファイル全体の構成</h2>
+<p>animCJK の SVG は「<strong>5 つの要素</strong>」で構成されています。</p>
+
+<pre><code><span class="comment">&lt;!-- ① ライセンスコメント --&gt;</span>
+<span class="keyword">&lt;svg</span> <span class="attr">id</span>=<span class="str">"z12354"</span> <span class="attr">class</span>=<span class="str">"acjk"</span> <span class="attr">viewBox</span>=<span class="str">"0 0 1024 1024"</span>&gt;
+
+  <span class="comment">② スタイル + キーフレーム定義</span>
+  <span class="keyword">&lt;style&gt;</span>
+    @keyframes zk { to { stroke-dashoffset: 0; } }
+    svg.acjk path[clip-path] { ...アニメ設定... }
+    svg.acjk path[id] { fill: #ccc; }
+  <span class="keyword">&lt;/style&gt;</span>
+
+  <span class="comment">③ シルエット（各画の塗り部分）</span>
+  <span class="keyword">&lt;path</span> <span class="attr">id</span>=<span class="str">"z12354d1"</span>  <span class="attr">d</span>=<span class="str">"M660 211 ..."</span>/&gt;   <span class="comment">← 1画目（横棒）</span>
+  <span class="keyword">&lt;path</span> <span class="attr">id</span>=<span class="str">"z12354d2"</span>  <span class="attr">d</span>=<span class="str">"M334 128 ..."</span>/&gt;   <span class="comment">← 2画目（縦棒+曲線）</span>
+  <span class="keyword">&lt;path</span> <span class="attr">id</span>=<span class="str">"z12354d3a"</span> <span class="attr">d</span>=<span class="str">"M559 431 ..."</span>/&gt;   <span class="comment">← 3画目（前半）</span>
+  <span class="keyword">&lt;path</span> <span class="attr">id</span>=<span class="str">"z12354d3b"</span> <span class="attr">d</span>=<span class="str">"M602 484 ..."</span>/&gt;   <span class="comment">← 3画目（後半）</span>
+
+  <span class="comment">④ シルエットを clip-path 用マスクに変換</span>
+  <span class="keyword">&lt;defs&gt;</span>
+    <span class="keyword">&lt;clipPath</span> <span class="attr">id</span>=<span class="str">"z12354c1"</span>&gt;<span class="keyword">&lt;use</span> <span class="attr">href</span>=<span class="str">"#z12354d1"</span>/&gt;<span class="keyword">&lt;/clipPath&gt;</span>
+    ... (d2, d3a, d3b も同様)
+  <span class="keyword">&lt;/defs&gt;</span>
+
+  <span class="comment">⑤ 中心線（median）— これがアニメで「描かれる」</span>
+  <span class="keyword">&lt;path</span> <span class="attr">style</span>=<span class="str">"--d:1s"</span> <span class="attr">clip-path</span>=<span class="str">"url(#z12354c1)"</span>  <span class="attr">d</span>=<span class="str">"M 174,258 ..."</span>/&gt;
+  <span class="keyword">&lt;path</span> <span class="attr">style</span>=<span class="str">"--d:2s"</span> <span class="attr">clip-path</span>=<span class="str">"url(#z12354c2)"</span>  <span class="attr">d</span>=<span class="str">"M 331,137 ..."</span>/&gt;
+  <span class="keyword">&lt;path</span> <span class="attr">style</span>=<span class="str">"--d:3s"</span> <span class="attr">clip-path</span>=<span class="str">"url(#z12354c3a)"</span> <span class="attr">d</span>=<span class="str">"M 570,440 ..."</span>/&gt;
+  <span class="keyword">&lt;path</span> <span class="attr">style</span>=<span class="str">"--d:3s"</span> <span class="attr">clip-path</span>=<span class="str">"url(#z12354c3b)"</span> <span class="attr">d</span>=<span class="str">"M -170,442 ..."</span>/&gt;
+
+<span class="keyword">&lt;/svg&gt;</span></code></pre>
+
+<h2>3. パーツを分解して見る</h2>
+<p>
+構成要素を視覚的に分解します。
+</p>
+
+<div class="demo">
+  <div class="demo-cell">
+    <div id="demo-outline"></div>
+    <div class="demo-label">③ シルエットだけ<br>（灰色のグリフ）</div>
+  </div>
+  <div class="demo-cell">
+    <div id="demo-median"></div>
+    <div class="demo-label">⑤ 中心線（median）だけ<br>赤線で表示</div>
+  </div>
+  <div class="demo-cell">
+    <div id="demo-noclip"></div>
+    <div class="demo-label">中心線を <code>stroke-width:128</code> で描画<br>（クリップなし＝青）</div>
+  </div>
+  <div class="demo-cell">
+    <div id="demo-final"></div>
+    <div class="demo-label">クリップ適用後<br>シルエット内だけが見える</div>
+  </div>
+</div>
+
+<p>
+左から右へ「太い線で中心線をなぞる → シルエット形状に切り抜く → 字形が書き順通り埋まる」という仕組みが分かります。
+</p>
+
+<h2>4. アニメーションの仕組み</h2>
+
+<p>animCJK のアニメは SVG の <code>stroke-dashoffset</code> アニメで実装されています。</p>
+
+<pre><code>svg.acjk path[clip-path] {
+  <span class="comment">/* 線の長さ分の破線パターン */</span>
+  stroke-dasharray: 3337;
+  <span class="comment">/* 初期は破線オフセットを線の長さ以上にして「全部消した」状態 */</span>
+  stroke-dashoffset: 3339;
+
+  <span class="comment">/* これを 0 までアニメすると「先端から線が伸びる」 */</span>
+  animation: zk var(--t) linear forwards var(--d);
+}
+@keyframes zk { to { stroke-dashoffset: 0; } }</code></pre>
+
+<div class="note">
+<strong>pathLength="3333" の役割:</strong> 中心線の実長は数字によって違いますが <code>pathLength</code> 属性で「このパスは長さ 3333 ということにする」と<strong>仮想的に正規化</strong>できます。だから <code>stroke-dasharray: 3337</code> は全パスで使えます。
+</div>
+
+<p>
+中心線は <code>stroke-width: 128</code> で描画されます。1024×1024 のキャンバス上で字形のシルエットを覆う太さです。さらに <code>clip-path</code> でシルエットの形に切り抜くため、太線が動いているのに字形が書き順通りに埋まるように見えます。
+</p>
+
+<h3>--d による書き順制御</h3>
+
+<p>各画の median には <code>--d:Ns</code> という CSS 変数が付いていて、これが <code>animation-delay</code> になります。</p>
+
+<table>
+<tr><th>画</th><th>--d</th><th>役割</th></tr>
+<tr><td>1画目</td><td><code>--d: 1s</code></td><td>1秒後にアニメ開始</td></tr>
+<tr><td>2画目</td><td><code>--d: 2s</code></td><td>2秒後にアニメ開始</td></tr>
+<tr><td>3画目</td><td><code>--d: 3s</code></td><td>3秒後にアニメ開始</td></tr>
+</table>
+
+<p>各アニメの長さは <code>--t: 0.8s</code> なので、書き順通りに 1秒間隔で次々と描かれていきます。</p>
+
+<h2>5. 3画目の分割テクニック</h2>
+
+<p>
+「あ」の 3画目はループする複雑な形状です。シルエットを 2 つに分け、両方のアニメを同時開始することで 1 つの連続ストロークがループを描いているように表示します。
+</p>
+
+<div class="demo">
+  <div class="demo-cell">
+    <div id="demo-d3a"></div>
+    <div class="demo-label">3画目 前半 (d3a)<br>右側の C 字部分</div>
+  </div>
+  <div class="demo-cell">
+    <div id="demo-d3b"></div>
+    <div class="demo-label">3画目 後半 (d3b)<br>下のループ部分</div>
+  </div>
+  <div class="demo-cell">
+    <div id="demo-d3"></div>
+    <div class="demo-label">合体（同時アニメ）<br>1ストロークに見える</div>
+  </div>
+</div>
+
+<p>後半 (d3b) の median は <code>M -170,442 ...</code> とキャンバス外から始まります。クリップでループの内側部分しか見えないため、線がループを横切って visible になる効果になります。</p>
+
+<h2>6. animNumber との対応</h2>
+
+<p>
+animNumber (<code>main.go</code>) はこの構造を Go コードで生成しています。 <code>buildSVG</code> 関数の処理が animCJK の各要素に対応します。
+</p>
+
+<pre><code><span class="comment">// main.go:240 あたり</span>
+sb.WriteString(<span class="str">`&lt;svg id="..." class="acjk" viewBox="0 0 1024 1024" ...&gt;`</span>)
+sb.WriteString(svgStyle)              <span class="comment">// ② style ブロック</span>
+
+for ... {
+  &lt;path id="..." d="..."/&gt;            <span class="comment">// ③ Stroke の Outline</span>
+}
+
+&lt;defs&gt;
+  &lt;clipPath&gt; ... &lt;/clipPath&gt;            <span class="comment">// ④ clipPath 化</span>
+&lt;/defs&gt;
+
+for ... {
+  &lt;path style="--d:Ns" clip-path=".." pathLength="3333" d="..."/&gt;
+                                       <span class="comment">// ⑤ Median を polyline (M..L..) で出力</span>
+}</code></pre>
+
+<p>
+<code>main.go</code> の <code>DigitDef</code> / <code>StrokeDef</code> 構造が Outline と Median に対応します。Median は <code>[]Point</code> で手書き定義され、 <code>buildMedianPath</code> が <code>M x y L x y L x y ...</code> 形式に展開します。
+</p>
+
+<h2>まとめ</h2>
+
+<table>
+<tr><th>要素</th><th>役割</th></tr>
+<tr><td><code>&lt;path id&gt;</code></td><td>各画のシルエット（灰色塗り）。clip-path のソース</td></tr>
+<tr><td><code>&lt;clipPath&gt;</code></td><td>シルエットを切り抜きマスクに変換</td></tr>
+<tr><td><code>&lt;path clip-path&gt;</code></td><td>太線（128px）の中心線。stroke-dashoffset アニメで描画される</td></tr>
+<tr><td><code>--d: Ns</code></td><td>各画のアニメ開始遅延（書き順制御）</td></tr>
+<tr><td><code>pathLength="3333"</code></td><td>パス長を仮想的に固定し全画で同じ dasharray を使う</td></tr>
+</table>
+
+<script>
+let cachedSVG = null;
+
+function setupDemos() {
+  // Fetch the original animCJK SVG for hiragana 'あ' (U+3042 = 12354) directly
+  // from the upstream repo so this page is self-contained.
+  fetch('https://raw.githubusercontent.com/parsimonhi/animCJK/master/svgsJaKana/12354.svg')
+    .then(r => r.text())
+    .then(text => {
+      cachedSVG = text;
+      buildAllDemos(text);
+    });
+}
+
+function makeIdsUnique(container, suffix) {
+  // Rewrite ids and refs so multiple copies of the same SVG don't share clipPath ids
+  const svg = container.querySelector('svg');
+  if (!svg) return;
+  svg.querySelectorAll('[id]').forEach(el => {
+    const oldId = el.id;
+    el.id = oldId + '_' + suffix;
+  });
+  svg.querySelectorAll('use[href]').forEach(el => {
+    const v = el.getAttribute('href');
+    if (v && v.startsWith('#')) el.setAttribute('href', v + '_' + suffix);
+  });
+  svg.querySelectorAll('[clip-path]').forEach(el => {
+    const v = el.getAttribute('clip-path');
+    const m = v && v.match(/url\(#([^)]+)\)/);
+    if (m) el.setAttribute('clip-path', `url(#${m[1]}_${suffix})`);
+  });
+}
+
+function buildStrokeIsolated(containerId, svgText, keepOutlineIds, keepClipIds) {
+  // Build a new SVG showing only specified strokes
+  const tmp = document.createElement('div');
+  tmp.innerHTML = svgText;
+  const svg = tmp.querySelector('svg');
+
+  // Remove outlines not in keep list
+  svg.querySelectorAll('path[id]').forEach(p => {
+    if (!keepOutlineIds.includes(p.id)) p.remove();
+  });
+  // Remove clipPaths not in keep list
+  svg.querySelectorAll('clipPath').forEach(c => {
+    if (!keepClipIds.includes(c.id)) c.remove();
+  });
+  // Remove animated medians whose clip-path is not in keep list
+  svg.querySelectorAll('path[clip-path]').forEach(p => {
+    const m = p.getAttribute('clip-path').match(/url\(#([^)]+)\)/);
+    if (!m || !keepClipIds.includes(m[1])) p.remove();
+  });
+
+  document.getElementById(containerId).innerHTML = svg.outerHTML;
+  makeIdsUnique(document.getElementById(containerId), containerId);
+}
+
+function replayAll() {
+  if (!cachedSVG) return;
+  // Re-injecting innerHTML recreates the SVG nodes so CSS animations restart
+  // from the beginning. Toggling animation property + reflow is unreliable
+  // when the animation uses `forwards` and has already completed.
+  buildAllDemos(cachedSVG);
+}
+
+function buildAllDemos(svgText) {
+  const stripped = svgText.replace(/<style[\s\S]*?<\/style>/g, '');
+
+  document.getElementById('full-demo').innerHTML = stripped;
+  document.getElementById('demo-outline').innerHTML =
+    stripped.replace('class="acjk"', 'class="acjk outline-only"');
+  document.getElementById('demo-median').innerHTML =
+    stripped.replace('class="acjk"', 'class="acjk median-only"');
+  document.getElementById('demo-noclip').innerHTML =
+    stripped.replace('class="acjk"', 'class="acjk no-clip"');
+  document.getElementById('demo-final').innerHTML = stripped;
+
+  makeIdsUnique(document.getElementById('full-demo'), 'full');
+  makeIdsUnique(document.getElementById('demo-outline'), 'a');
+  makeIdsUnique(document.getElementById('demo-median'), 'b');
+  makeIdsUnique(document.getElementById('demo-noclip'), 'c');
+  makeIdsUnique(document.getElementById('demo-final'), 'd');
+
+  buildStrokeIsolated('demo-d3a', stripped, ['z12354d3a'], ['z12354c3a']);
+  buildStrokeIsolated('demo-d3b', stripped, ['z12354d3b'], ['z12354c3b']);
+  buildStrokeIsolated('demo-d3', stripped, ['z12354d3a', 'z12354d3b'], ['z12354c3a', 'z12354c3b']);
+}
+
+setupDemos();
+</script>
+</body>
+</html>
