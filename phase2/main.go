@@ -81,13 +81,24 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '3', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			{Letter: "", Median: []Point{
-				{360, 600}, {420, 650}, {500, 670}, {560, 660},
-				{620, 620}, {650, 560}, {640, 480}, {580, 420},
-				{510, 405}, {435, 395}, {510, 385},
-				{570, 380}, {620, 350}, {650, 290}, {650, 220},
-				{620, 150}, {560, 110}, {490, 90},
-				{420, 100}, {370, 140}, {330, 180},
+			// a: upper bump traced CCW from upper-left around top to the
+			// middle pinch (where the two bumps meet). Followed by a vertical
+			// off-canvas extension downward so a stays invisible during b's
+			// visible portion, producing the one-stroke illusion.
+			{Letter: "a", Median: []Point{
+				{380, 610}, {430, 650}, {520, 650}, {590, 630}, {640, 600},
+				{650, 540}, {650, 470}, {620, 430}, {570, 410}, {480, 410},
+				{480, -200},
+			}},
+			// b: from middle pinch CW around the lower bump (right wall,
+			// bottom, lower-left curl tail). Long vertical pre-lead-in from
+			// far above the canvas keeps b invisible until a finishes the
+			// upper bump.
+			{Letter: "b", Median: []Point{
+				{480, 1149},
+				{480, 410}, {550, 390}, {620, 360}, {670, 310}, {680, 240},
+				{660, 170}, {610, 110}, {520, 90}, {430, 100}, {370, 140},
+				{340, 170},
 			}},
 		}},
 	}},
