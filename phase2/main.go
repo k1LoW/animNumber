@@ -41,24 +41,26 @@ var digitMedians = []DigitMedians{
 	{Char: '0', Phases: []Phase{
 		{Number: 1, Parts: []Part{
 			// a: full CCW loop from upper-left split, traced through left
-			// arc, bottom, right arc, top, back to the split. Clipped to
-			// the left half so only the left arc draws; the right-side
-			// portion of the median is occluded by the clip.
+			// arc, bottom, right arc, top, back to the split, then a
+			// short dive into the upper-left wedge so a's endpoint
+			// matches b's at [405, 555] (animCJK shared-endpoint rule).
 			{Letter: "a", Median: []Point{
 				{415, 630}, {380, 580}, {360, 500}, {350, 380},
 				{370, 270}, {410, 180}, {470, 110}, {510, 85},
 				{580, 110}, {620, 170}, {650, 250}, {660, 380},
 				{650, 500}, {620, 600}, {580, 660}, {512, 680},
-				{450, 670}, {415, 630},
+				{450, 670}, {415, 630}, {405, 555},
 			}},
 			// b: off-canvas lead-in delays b's visible drawing until the
-			// right half. Final point [415, 630] matches a's endpoint so
-			// the loop closure is shared between the two paths (animCJK
-			// "あ"-stroke-3 pattern).
+			// right half. The final two points {425, 625}, {405, 555}
+			// trace into the upper-left wedge of c1b so the stroke
+			// covers that thin closure region — without them the wedge
+			// is left as exposed gray fill.
 			{Letter: "b", Median: []Point{
 				{-101, 85}, {510, 85}, {580, 110}, {620, 170},
 				{650, 250}, {660, 380}, {650, 500}, {620, 600},
-				{580, 660}, {512, 680}, {450, 670}, {415, 630},
+				{580, 660}, {512, 680}, {450, 670}, {425, 625},
+				{405, 555},
 			}},
 		}},
 	}},
@@ -202,38 +204,43 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '9', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: bowl CCW from upper-right around to bowl-bottom. Then a
-			// vertical off-canvas dip (capped at -200, ≤500 outside
-			// bbox) keeps a invisible during b's closure, and finally
-			// jumps to the shared endpoint at the descender foot.
+			// Off-canvas lead-in / lead-out lengths are tuned so each
+			// path's visible-drawing window is sequential within the
+			// 0.8s animation: bowl 0-33%, closure 33-58%, descender
+			// 58-100%. All three excursions stay within ≤500 outside
+			// the digit bbox. All medians end at the shared foot
+			// endpoint [585, 50].
+			//
+			// a: bowl CCW from upper-right around to bowl-bottom (visible
+			// 0-33%), then a vertical off-canvas dip down to [420, -450]
+			// keeps a invisible during b/c's visible portions, ending at
+			// the shared foot endpoint.
 			{Letter: "a", Median: []Point{
 				{640, 600}, {570, 660}, {490, 670}, {420, 660}, {370, 620},
 				{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
 				{420, 320},
-				{420, -200},
+				{420, -450},
 				{585, 50},
 			}},
-			// b: vertical off-canvas lead-in from below (capped at -180)
-			// keeps b invisible during a's bowl drawing. b then traces
-			// the closure up to the upper-right corner, then exits to
-			// off-canvas right ([800, 650] is 115 outside bbox right) to
-			// stay invisible during c's descender, ending at the shared
-			// foot endpoint.
+			// b: vertical off-canvas lead-in from [440, -300] keeps b
+			// invisible until a finishes bowl (~33%). b traces the
+			// closure to the upper-right corner (visible 33-58%), then
+			// exits to off-canvas right [800, 650] to stay invisible
+			// during c's descender, ending at the shared foot.
 			{Letter: "b", Median: []Point{
-				{440, -180},
+				{440, -300},
 				{440, 320}, {490, 320}, {530, 350}, {560, 380}, {580, 410},
 				{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
 				{685, 620}, {680, 650},
 				{800, 650},
 				{585, 50},
 			}},
-			// c: long off-canvas left lead-in (capped at -160, ≤500
-			// outside bbox; routed via [-160, 100] -> [-160, 650] to
-			// reach the path length needed to delay c until ~67% of the
-			// animation), then traces the descender down to the shared
-			// foot endpoint.
+			// c: off-canvas left lead-in via [-150, 600] -> [-150, 650]
+			// -> [680, 650] keeps c invisible until b finishes closure
+			// (~59%), then descender traces down to the shared foot
+			// endpoint (visible 59-100%).
 			{Letter: "c", Median: []Point{
-				{-160, 100}, {-160, 650},
+				{-150, 600}, {-150, 650},
 				{680, 650}, {665, 580}, {650, 510}, {640, 440}, {625, 380},
 				{615, 310}, {610, 240}, {605, 170}, {595, 100}, {585, 50},
 			}},
