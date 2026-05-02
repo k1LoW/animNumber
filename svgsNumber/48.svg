@@ -37,5 +37,5 @@ svg.acjk path[id] {fill:#ccc;}
 	<clipPath id="z48c1b"><use href="#z48d1b"/></clipPath>
 </defs>
 <path style="--d:1s;" pathLength="3333" clip-path="url(#z48c1a)" d="M415 270L380 320L360 400L350 520L370 630L410 720L470 790L510 815L580 790L620 730L650 650L660 520L650 400L620 300L580 240L512 220L450 230L415 270"/>
-<path style="--d:1s;" pathLength="3333" clip-path="url(#z48c1b)" d="M -101 815L510 815L580 790L620 730L650 650L660 520L650 400L620 300L580 240L512 220L450 230L425 275L405 345"/>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z48c1b)" d="M -101 815L510 815L580 790L620 730L650 650L660 520L650 400L620 300L580 240L512 220L450 230L415 270"/>
 </svg>

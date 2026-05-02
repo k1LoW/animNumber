@@ -40,9 +40,10 @@ const outDir = "svgsNumber"
 var digitMedians = []DigitMedians{
 	{Char: '0', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// Full counterclockwise stroke from top split, down the left, across the
-			// bottom, up the right, and back to top split. Clipped to the left half,
-			// only the left arc portion (first half) is visible.
+			// a: full CCW loop from upper-left split, traced through left
+			// arc, bottom, right arc, top, back to the split. Clipped to
+			// the left half so only the left arc draws; the right-side
+			// portion of the median is occluded by the clip.
 			{Letter: "a", Median: []Point{
 				{415, 630}, {380, 580}, {360, 500}, {350, 380},
 				{370, 270}, {410, 180}, {470, 110}, {510, 85},
@@ -50,15 +51,14 @@ var digitMedians = []DigitMedians{
 				{650, 500}, {620, 600}, {580, 660}, {512, 680},
 				{450, 670}, {415, 630},
 			}},
-			// Off-canvas lead-in (single horizontal segment) sized so b's total
-			// path length matches a's. The final two points trace into the
-			// upper-left wedge of c1b so the stroke covers that thin region
-			// instead of leaving the gray fill exposed.
+			// b: off-canvas lead-in delays b's visible drawing until the
+			// right half. Final point [415, 630] matches a's endpoint so
+			// the loop closure is shared between the two paths (animCJK
+			// "あ"-stroke-3 pattern).
 			{Letter: "b", Median: []Point{
 				{-101, 85}, {510, 85}, {580, 110}, {620, 170},
 				{650, 250}, {660, 380}, {650, 500}, {620, 600},
-				{580, 660}, {512, 680}, {450, 670}, {425, 625},
-				{405, 555},
+				{580, 660}, {512, 680}, {450, 670}, {415, 630},
 			}},
 		}},
 	}},
@@ -81,19 +81,21 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '3', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: upper bump traced CCW from upper-left around top to the
-			// middle pinch (where the two bumps meet). Followed by a vertical
-			// off-canvas extension downward so a stays invisible during b's
-			// visible portion, producing the one-stroke illusion.
+			// a: upper bump CCW from upper-left, around top, down to the
+			// middle pinch. Followed by a vertical off-canvas extension
+			// downward so a stays invisible during b's visible portion,
+			// then back up to the shared endpoint at the lower-left curl
+			// (matching b's end).
 			{Letter: "a", Median: []Point{
 				{380, 610}, {430, 650}, {520, 650}, {590, 630}, {640, 600},
 				{650, 540}, {650, 470}, {620, 430}, {570, 410}, {480, 410},
 				{480, -200},
+				{340, 170},
 			}},
-			// b: from middle pinch CW around the lower bump (right wall,
-			// bottom, lower-left curl tail). Long vertical pre-lead-in from
-			// far above the canvas keeps b invisible until a finishes the
-			// upper bump.
+			// b: long vertical lead-in from above the canvas keeps b
+			// invisible until a finishes the upper bump, then b traces
+			// the lower bump CW around to the lower-left curl tail.
+			// Final point shared with a (animCJK pattern).
 			{Letter: "b", Median: []Point{
 				{480, 1149},
 				{480, 410}, {550, 390}, {620, 360}, {670, 310}, {680, 240},
@@ -133,24 +135,22 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '6', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// Full continuous stroke from upper-right tail, down through the
-			// left side and across the bottom, up the right side, and closing
-			// into the bowl interior. Clipped to c1a (left half + tail), only
-			// the first portion (tail through bottom-mid) is visible.
+			// a: full single-stroke "6" centerline. Clipped to c1a (left
+			// half + tail), only the first portion (tail through bottom
+			// arc) is visible; the right-half portion is occluded by the
+			// clip. Final point shared with b (animCJK pattern).
 			{Letter: "a", Median: []Point{
 				{570, 660}, {490, 580}, {430, 480}, {380, 380},
 				{340, 290}, {320, 220}, {350, 150}, {410, 100},
 				{490, 80}, {570, 100}, {640, 140}, {680, 220},
 				{680, 290}, {640, 370}, {570, 420}, {490, 430},
-				{420, 405}, {390, 380},
+				{420, 405}, {390, 380}, {350, 340},
 			}},
-			// Off-canvas lead-in sized so b's visible right-bowl portion picks
-			// up exactly when a finishes the visible tail/left arc — producing
-			// the one-stroke illusion. b extends past the closure into the
-			// lower-left of the bowl to cover the descender-bowl junction
-			// where a's stroke alone leaves a gray sliver.
+			// b: off-canvas lead-in delays b's visible right-bowl portion
+			// until a finishes the visible left arc. Capped at -160
+			// (≤500 outside bbox). Endpoint matches a.
 			{Letter: "b", Median: []Point{
-				{-329, 100}, {570, 100}, {640, 140}, {680, 220},
+				{-160, 100}, {570, 100}, {640, 140}, {680, 220},
 				{680, 290}, {640, 370}, {570, 420}, {490, 430},
 				{420, 405}, {390, 380}, {350, 340},
 			}},
@@ -173,26 +173,27 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '8', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// Right S traced through the WALL centerline (between outer and
-			// inner) of c1a: upper-right wall, around the top of upper loop
-			// CCW, down the left wall, through waist X-crossing down-right,
-			// down the right wall of lower loop, to bottom-mid (which is in
-			// c1a ∩ c1b overlap). After visible right S, off-canvas to the
-			// left so a stays invisible during b's visible portion.
+			// a: right S — upper-right tab, CCW around upper loop top,
+			// down the left wall, waist X-crossing, down right wall of
+			// lower loop, to bottom-mid. Then off-canvas-left (capped at
+			// -160, ≤500 outside bbox) so a stays invisible during b's
+			// visible left S, and finally jumps to the shared endpoint
+			// at the upper-right tab.
 			{Letter: "a", Median: []Point{
 				{640, 620}, {610, 650}, {510, 650}, {430, 650}, {400, 620},
 				{370, 560}, {360, 500}, {380, 450}, {420, 420}, {490, 400},
 				{550, 390}, {620, 360}, {660, 300}, {680, 230}, {660, 160},
 				{610, 110}, {490, 80},
-				{-700, 80},
+				{-160, 80},
+				{685, 570},
 			}},
-			// Vertical off-canvas lead-in (from far below up to bottom-mid)
-			// so b's visible left-S picks up when a finishes. b traces the
-			// LEFT wall of lower loop UP, through the waist X-crossing
-			// up-right, up to the upper-right tab — all in c1b's wall
-			// centerline.
+			// b: vertical off-canvas lead-in from below (capped at -420,
+			// ≤500 outside bbox) keeps b invisible until a finishes its
+			// right S. b then traces the LEFT wall of the lower loop UP,
+			// through the waist X-crossing up-right, ending at the shared
+			// upper-right tab endpoint.
 			{Letter: "b", Median: []Point{
-				{490, -656}, {490, 80},
+				{490, -420}, {490, 80},
 				{440, 80}, {380, 110}, {350, 170}, {340, 230}, {340, 290},
 				{360, 350}, {410, 380}, {460, 410}, {530, 430}, {580, 460},
 				{620, 490}, {660, 510}, {680, 540}, {685, 570},
@@ -201,35 +202,38 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '9', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: top + left + bottom of bowl (CCW from upper-right around
-			// to the bowl bottom). Followed by an off-canvas extension
-			// (straight down) sized so a's visible portion is ~33% of the
-			// animation (a finishes drawing the bowl bottom before b
-			// starts).
+			// a: bowl CCW from upper-right around to bowl-bottom. Then a
+			// vertical off-canvas dip (capped at -200, ≤500 outside
+			// bbox) keeps a invisible during b's closure, and finally
+			// jumps to the shared endpoint at the descender foot.
 			{Letter: "a", Median: []Point{
 				{640, 600}, {570, 660}, {490, 670}, {420, 660}, {370, 620},
 				{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
 				{420, 320},
-				{420, -968},
+				{420, -200},
+				{585, 50},
 			}},
-			// b: traces from the bowl bottom going up-right, around the
-			// closure, and continuing all the way up to the upper-right
-			// corner of the digit (where the descender begins). Vertical
-			// off-canvas pre-lead-in from below the canvas keeps b
-			// invisible until a finishes (~33%); horizontal off-canvas
-			// post-trailing keeps b invisible after ~67% so c takes over.
+			// b: vertical off-canvas lead-in from below (capped at -180)
+			// keeps b invisible during a's bowl drawing. b then traces
+			// the closure up to the upper-right corner, then exits to
+			// off-canvas right ([800, 650] is 115 outside bbox right) to
+			// stay invisible during c's descender, ending at the shared
+			// foot endpoint.
 			{Letter: "b", Median: []Point{
 				{440, -180},
 				{440, 320}, {490, 320}, {530, 350}, {560, 380}, {580, 410},
 				{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
 				{685, 620}, {680, 650},
-				{1237, 650},
+				{800, 650},
+				{585, 50},
 			}},
-			// c: descender from the very top of the digit down to the foot.
-			// Long horizontal off-canvas pre-lead-in keeps c invisible until
-			// ~67% of the animation, exactly when b finishes.
+			// c: long off-canvas left lead-in (capped at -160, ≤500
+			// outside bbox; routed via [-160, 100] -> [-160, 650] to
+			// reach the path length needed to delay c until ~67% of the
+			// animation), then traces the descender down to the shared
+			// foot endpoint.
 			{Letter: "c", Median: []Point{
-				{-558, 650},
+				{-160, 100}, {-160, 650},
 				{680, 650}, {665, 580}, {650, 510}, {640, 440}, {625, 380},
 				{615, 310}, {610, 240}, {605, 170}, {595, 100}, {585, 50},
 			}},
