@@ -5,7 +5,6 @@ Animated SVGs of Arabic numerals (0-9) in [animCJK](https://github.com/parsimonh
 ## Demo
 
 - Numerals: <https://k1low.github.io/animNumber/>
-- How an animCJK SVG works (using "あ" as example): <https://k1low.github.io/animNumber/animCJK.html>
 
 ## Repository layout
 
