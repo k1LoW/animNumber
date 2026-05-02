@@ -24,7 +24,7 @@ go run ./phase2   # preserve outlines, refresh medians/style/clipPath
 
 ## Glyph attribution and modifications
 
-Digit glyph outlines are **derived and modified** from [Klee One Regular](https://fonts.google.com/specimen/Klee+One) by Fontworks Inc., licensed under the [SIL Open Font License, Version 1.1](licenses/OFL.txt).
+Digit glyph outlines are **derived and modified** from [Klee One](https://github.com/fontworks-fonts/Klee), Copyright 2020 The Klee Project Authors, licensed under the [SIL Open Font License, Version 1.1](licenses/OFL.txt).
 
 The following modifications have been applied to the original glyph outlines:
 

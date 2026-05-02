@@ -370,10 +370,14 @@ svg.acjk path[id] {fill:#ccc;}
 
 func svgComment() string {
 	return `<!--
-animNumber Copyright 2026- k1LoW, https://github.com/k1LoW/animNumber
-Glyph outlines derived and modified from Klee One Regular by Fontworks Inc.
-Klee One is licensed under the SIL Open Font License, Version 1.1.
-See https://openfontlicense.org/ for the license text.
+animNumber 2026 Copyright k1LoW, https://github.com/k1LoW/animNumber
+Derived from:
+    Klee One - https://github.com/fontworks-fonts/Klee
+    Copyright 2020 The Klee Project Authors
+You can redistribute and/or modify this file under the terms of the SIL Open Font License, Version 1.1
+as published by SIL International.
+You should have received a copy of this license along with this file.
+If not, see https://openfontlicense.org/.
 -->
 `
 }
