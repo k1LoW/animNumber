@@ -72,7 +72,11 @@ func roundCoord(s string) int {
 }
 
 // flipMedian parses an SVG median d="M x y L x y L x y..." path and returns
-// the points in animCJK source space (y-up).
+// the points in animCJK source space (y-up). Trailing off-canvas points
+// (which phase2 emits as LeadOut for stroke-dashoffset timing in the SVG)
+// are stripped so graphicsNumber.txt only contains the clean centerline.
+// Leading off-canvas points are kept — they are valid lead-ins that
+// hanzi-writer's dual-clip technique relies on.
 func flipMedian(d string) [][2]int {
 	d = strings.ReplaceAll(d, ",", " ")
 	matches := medSegRe.FindAllStringSubmatch(d, -1)
@@ -81,6 +85,16 @@ func flipMedian(d string) [][2]int {
 		x, _ := strconv.ParseFloat(m[1], 64)
 		y, _ := strconv.ParseFloat(m[2], 64)
 		pts = append(pts, [2]int{int(math.Round(x)), 900 - int(math.Round(y))})
+	}
+	for len(pts) > 0 {
+		last := pts[len(pts)-1]
+		sx, sy := last[0], last[1]
+		// SVG canvas is 0-1024; in source y-up that maps to y in [-124, 900].
+		offCanvas := sx < 0 || sx > 1024 || sy < -124 || sy > 900
+		if !offCanvas {
+			break
+		}
+		pts = pts[:len(pts)-1]
 	}
 	return pts
 }

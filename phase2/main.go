@@ -18,8 +18,9 @@ import (
 type Point struct{ X, Y float64 }
 
 type Part struct {
-	Letter string  // "" for single-part, "a"/"b"/... for splits
-	Median []Point
+	Letter  string  // "" for single-part, "a"/"b"/... for splits
+	Median  []Point // clean centerline (output to graphicsNumber.txt as-is; lead-in points kept here are valid for hanzi-writer dual-clip technique)
+	LeadOut []Point // SVG-only, appended after Median in the SVG <path> d attribute. Used to lengthen the SVG stroke-dashoffset path so the visible drawing of this part finishes before the next part's visible drawing starts. Stripped from graphicsNumber.txt.
 }
 
 type Phase struct {
@@ -177,23 +178,25 @@ var digitMedians = []DigitMedians{
 		{Number: 1, Parts: []Part{
 			// a: right S — upper-right tab, CCW around upper loop top,
 			// down the left wall, waist X-crossing, down right wall of
-			// lower loop, to bottom-mid. Then off-canvas-left (capped at
-			// -160, ≤500 outside bbox) so a stays invisible during b's
-			// visible left S, and finally jumps to the shared endpoint
-			// at the upper-right tab.
-			{Letter: "a", Median: []Point{
-				{640, 620}, {610, 650}, {510, 650}, {430, 650}, {400, 620},
-				{370, 560}, {360, 500}, {380, 450}, {420, 420}, {490, 400},
-				{550, 390}, {620, 360}, {660, 300}, {680, 230}, {660, 160},
-				{610, 110}, {490, 80},
-				{-160, 80},
-				{685, 570},
-			}},
-			// b: vertical off-canvas lead-in from below (capped at -420,
-			// ≤500 outside bbox) keeps b invisible until a finishes its
-			// right S. b then traces the LEFT wall of the lower loop UP,
-			// through the waist X-crossing up-right, ending at the shared
-			// upper-right tab endpoint.
+			// lower loop, to bottom-mid [490, 80]. Ends here so that
+			// b's visible portion picks up exactly where a finishes
+			// (animCJK dual-clip pattern). LeadOut [-700, 80] lengthens
+			// a's SVG path so the visible right S finishes around 43%
+			// of the 0.8s animation, before b's left S becomes visible.
+			{Letter: "a",
+				Median: []Point{
+					{640, 620}, {610, 650}, {510, 650}, {430, 650}, {400, 620},
+					{370, 560}, {360, 500}, {380, 450}, {420, 420}, {490, 400},
+					{550, 390}, {620, 360}, {660, 300}, {680, 230}, {660, 160},
+					{610, 110}, {490, 80},
+				},
+				LeadOut: []Point{{-700, 80}},
+			},
+			// b: vertical off-canvas lead-in from [490, -420] (≤500
+			// outside bbox) keeps b invisible until a finishes its right
+			// S at the bottom-mid pickup [490, 80]. b then traces the
+			// LEFT wall of the lower loop UP, through the waist
+			// X-crossing up-right, ending at the upper-right tab.
 			{Letter: "b", Median: []Point{
 				{490, -420}, {490, 80},
 				{440, 80}, {380, 110}, {350, 170}, {340, 230}, {340, 290},
@@ -204,43 +207,42 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '9', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// Off-canvas lead-in / lead-out lengths are tuned so each
-			// path's visible-drawing window is sequential within the
-			// 0.8s animation: bowl 0-33%, closure 33-58%, descender
-			// 58-100%. All three excursions stay within ≤500 outside
-			// the digit bbox. All medians end at the shared foot
-			// endpoint [585, 50].
+			// Each path ends at its own visible-end point so the next
+			// part's lead-in picks up exactly there (animCJK dual-clip
+			// pattern — see also "8"). LeadOut on a/b lengthens the SVG
+			// stroke-dashoffset path so the visible drawings sequence
+			// (bowl 0-32%, closure 33-63%, descender 67-100%) within the
+			// 0.8s animation. LeadOut is stripped from graphicsNumber.txt.
 			//
-			// a: bowl CCW from upper-right around to bowl-bottom (visible
-			// 0-33%), then a vertical off-canvas dip down to [420, -450]
-			// keeps a invisible during b/c's visible portions, ending at
-			// the shared foot endpoint.
-			{Letter: "a", Median: []Point{
-				{640, 600}, {570, 660}, {490, 670}, {420, 660}, {370, 620},
-				{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
-				{420, 320},
-				{420, -450},
-				{585, 50},
-			}},
-			// b: vertical off-canvas lead-in from [440, -300] keeps b
-			// invisible until a finishes bowl (~33%). b traces the
-			// closure to the upper-right corner (visible 33-58%), then
-			// exits to off-canvas right [800, 650] to stay invisible
-			// during c's descender, ending at the shared foot.
-			{Letter: "b", Median: []Point{
-				{440, -300},
-				{440, 320}, {490, 320}, {530, 350}, {560, 380}, {580, 410},
-				{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
-				{685, 620}, {680, 650},
-				{800, 650},
-				{585, 50},
-			}},
-			// c: off-canvas left lead-in via [-150, 600] -> [-150, 650]
-			// -> [680, 650] keeps c invisible until b finishes closure
-			// (~59%), then descender traces down to the shared foot
-			// endpoint (visible 59-100%).
+			// a: bowl CCW from upper-right around to bowl-bottom,
+			// ending at [420, 320] — where b's visible portion picks up.
+			{Letter: "a",
+				Median: []Point{
+					{640, 600}, {570, 660}, {490, 670}, {420, 660}, {370, 620},
+					{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
+					{420, 320},
+				},
+				LeadOut: []Point{{420, -968}},
+			},
+			// b: vertical off-canvas lead-in from [440, -180] keeps b
+			// invisible until a finishes bowl. b then traces the closure
+			// up to the upper-right corner [680, 650] — where c's
+			// visible portion picks up.
+			{Letter: "b",
+				Median: []Point{
+					{440, -180},
+					{440, 320}, {490, 320}, {530, 350}, {560, 380}, {580, 410},
+					{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
+					{685, 620}, {680, 650},
+				},
+				LeadOut: []Point{{1237, 650}},
+			},
+			// c: off-canvas left lead-in via [-150, 50] -> [-150, 650] ->
+			// [680, 650] (≤500 outside bbox) keeps c invisible until b
+			// finishes closure (~70%). c then traces the descender down
+			// to the foot [585, 50].
 			{Letter: "c", Median: []Point{
-				{-150, 600}, {-150, 650},
+				{-150, 50}, {-150, 650},
 				{680, 650}, {665, 580}, {650, 510}, {640, 440}, {625, 380},
 				{615, 310}, {610, 240}, {605, 170}, {595, 100}, {585, 50},
 			}},
@@ -289,7 +291,7 @@ func parseSVG(path string) ([]Outline, error) {
 	return outlines, nil
 }
 
-func findMedian(char rune, phase int, part string) []Point {
+func findPart(char rune, phase int, part string) (Part, bool) {
 	for _, dm := range digitMedians {
 		if dm.Char != char {
 			continue
@@ -300,12 +302,12 @@ func findMedian(char rune, phase int, part string) []Point {
 			}
 			for _, pt := range ph.Parts {
 				if pt.Letter == part {
-					return pt.Median
+					return pt, true
 				}
 			}
 		}
 	}
-	return nil
+	return Part{}, false
 }
 
 // --- coordinate transform (animCJK source y-up -> SVG y-down) ---
@@ -427,12 +429,17 @@ func buildSVG(char rune, outlines []Outline) string {
 	sb.WriteString("</defs>\n")
 
 	for _, o := range outlines {
-		median := findMedian(char, o.Phase, o.Part)
-		if median == nil {
+		part, ok := findPart(char, o.Phase, o.Part)
+		if !ok {
 			sb.WriteString(fmt.Sprintf("<!-- missing median for %s -->\n", o.ID))
 			continue
 		}
-		medianPath := buildMedianPath(median)
+		// SVG path includes LeadOut so the stroke-dashoffset animation
+		// stays inside its clip during the off-canvas tail (sequencing
+		// the visible drawing across multi-part stroke groups). LeadOut
+		// is omitted from graphicsNumber.txt below.
+		full := append(append([]Point(nil), part.Median...), part.LeadOut...)
+		medianPath := buildMedianPath(full)
 		transformed := transformPath(medianPath)
 		sb.WriteString(fmt.Sprintf(`<path style="--d:%ds;" pathLength="3333" clip-path="url(#%s)" d="%s"/>`,
 			o.Phase, clipID(o.ID), transformed))
