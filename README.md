@@ -30,9 +30,12 @@ Digit glyph outlines are **derived and modified** from [Klee One Regular](https:
 The following modifications have been applied to the original glyph outlines:
 
 - **All digits** are scaled (×0.85) and re-positioned so the baseline lands at animCJK source y=76, fitting the 1024×1024 viewBox used by animCJK.
-- **0, 6**: outline split into two halves (`d1a` / `d1b`) so the closed-loop stroke can be animated as a single continuous motion using the same dual-clip technique animCJK uses for "あ" stroke 3.
-- **4, 5**: outline split into physically distinct parts (frame / stem for "4"; top bar / body for "5") so each stroke clips to its own region rather than the full digit silhouette.
+- **0, 3, 6, 8**: outline split into two halves (`d1a` / `d1b`) so the closed-loop stroke can be animated as a single continuous motion using the same dual-clip technique animCJK uses for "あ" stroke 3. b's median includes an off-canvas pre-lead-in so its visible portion picks up exactly where a finishes.
+- **9**: outline split into three parts (`d1a` / `d1b` / `d1c`) for the bowl + descender, with sequential off-canvas timing so the three medians animate as one continuous stroke.
+- **4, 5**: outline split into physically distinct parts (frame / stem for "4"; top bar / body for "5") so each stroke clips to its own region rather than the full digit silhouette. These are written as 2 strokes (`--d:1s`, `--d:2s`).
 - **7**: a small downward flag was added at the upper-left so the digit can be written as 2 strokes (flag + horizontal-and-diagonal). The original Klee One "7" does not have this flag.
+
+Stroke counts after these modifications: 0, 1, 2, 3, 6, 8, 9 are 1画 (one-stroke) and 4, 5, 7 are 2画 (two-stroke).
 
 Each generated SVG includes a header comment naming Klee One and the OFL.
 
