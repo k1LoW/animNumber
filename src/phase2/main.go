@@ -271,6 +271,124 @@ var digitMedians = []DigitMedians{
 			},
 		}},
 	}},
+	// Full-width digits (U+FF10-FF19) — Klee One has independent glyphs
+	// for these (slightly wider than half-width). Bootstrap medians:
+	// scaled half-width medians (around x=512). Closed-loop digits
+	// (０/３/６/８/９) start as single-path; split into d1a/d1b/[d1c]
+	// in the SVG outlines via Affinity Designer when ready, then add
+	// matching multi-Part entries here mirroring the half-width design.
+	{Char: '０', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{611, 660}, {512, 680}, {431, 660}, {374, 600},
+				{340, 510}, {329, 380}, {340, 250}, {374, 170},
+				{431, 110}, {512, 80}, {589, 110}, {634, 170},
+				{668, 260}, {679, 380}, {668, 510}, {634, 600},
+				{611, 660},
+			}},
+		}},
+	}},
+	{Char: '１', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{433, 580}, {499, 630}, {575, 670}, {575, 80},
+			}},
+		}},
+	}},
+	{Char: '２', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{345, 580}, {400, 630}, {466, 660}, {543, 660},
+				{608, 630}, {652, 580}, {663, 530}, {641, 470},
+				{576, 400}, {488, 320}, {400, 230}, {334, 150},
+				{302, 100}, {422, 90}, {565, 90}, {718, 100},
+			}},
+		}},
+	}},
+	{Char: '３', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{345, 600}, {411, 650}, {499, 670}, {565, 660},
+				{631, 620}, {664, 560}, {653, 480}, {587, 420},
+				{510, 400}, {477, 395}, {543, 390}, {620, 360},
+				{664, 300}, {664, 230}, {631, 150}, {565, 110},
+				{488, 90}, {411, 100}, {356, 140}, {312, 180},
+			}},
+		}},
+	}},
+	{Char: '４', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{592, 660}, {422, 400}, {291, 230}, {499, 230}, {740, 240},
+			}},
+		}},
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{608, 670}, {608, 80},
+			}},
+		}},
+	}},
+	{Char: '５', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{687, 640}, {521, 640}, {388, 640},
+			}},
+		}},
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{388, 640}, {366, 480}, {388, 400}, {488, 420},
+				{565, 410}, {631, 380}, {675, 320}, {675, 230},
+				{631, 160}, {554, 110}, {455, 100}, {366, 130},
+			}},
+		}},
+	}},
+	{Char: '６', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{565, 660}, {488, 580}, {422, 480}, {367, 380},
+				{323, 290}, {301, 220}, {334, 150}, {400, 100},
+				{488, 80}, {576, 100}, {653, 140}, {697, 220},
+				{697, 290}, {653, 370}, {576, 420}, {488, 430},
+				{400, 410}, {356, 380},
+			}},
+		}},
+	}},
+	{Char: '７', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{317, 645}, {329, 560}, {340, 480},
+			}},
+		}},
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{383, 615}, {521, 625}, {676, 625},
+				{587, 450}, {499, 280}, {432, 130}, {410, 80},
+			}},
+		}},
+	}},
+	{Char: '８', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{512, 660}, {421, 640}, {355, 580}, {344, 510},
+				{399, 450}, {488, 410}, {576, 370}, {642, 310},
+				{675, 230}, {631, 150}, {554, 100}, {488, 90},
+				{410, 100}, {344, 150}, {322, 230}, {355, 320},
+				{433, 380}, {521, 420}, {609, 460}, {664, 520},
+				{675, 580}, {631, 640}, {565, 660}, {512, 660},
+			}},
+		}},
+	}},
+	{Char: '９', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{
+				{661, 500}, {640, 580}, {587, 640}, {512, 660},
+				{435, 640}, {373, 580}, {340, 500},
+				{362, 410}, {427, 360}, {512, 350},
+				{587, 380}, {640, 430}, {661, 480},
+				{650, 390}, {628, 280}, {606, 180}, {584, 80},
+			}},
+		}},
+	}},
 }
 
 // SVG path id format: z<codepoint>d<phase>[<partletter>]
@@ -473,8 +591,37 @@ func buildSVG(char rune, outlines []Outline) string {
 	return sb.String()
 }
 
+// listSVGCodepoints returns the codepoints of every "<int>.svg" file in
+// svgsNumber/ (so phase2/phase3/debug iterate over whatever phase1
+// emitted, including both half-width 0-9 and full-width ０-９).
+func listSVGCodepoints() ([]int, error) {
+	entries, err := os.ReadDir(outDir)
+	if err != nil {
+		return nil, err
+	}
+	var cps []int
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".svg") {
+			continue
+		}
+		base := strings.TrimSuffix(e.Name(), ".svg")
+		cp, err := strconv.Atoi(base)
+		if err != nil {
+			continue
+		}
+		cps = append(cps, cp)
+	}
+	sort.Ints(cps)
+	return cps, nil
+}
+
 func main() {
-	for cp := 48; cp <= 57; cp++ {
+	cps, err := listSVGCodepoints()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error listing %s: %v\n", outDir, err)
+		os.Exit(1)
+	}
+	for _, cp := range cps {
 		path := filepath.Join(outDir, fmt.Sprintf("%d.svg", cp))
 		outlines, err := parseSVG(path)
 		if err != nil {

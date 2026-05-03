@@ -1,0 +1,38 @@
+<!--
+animNumber 2026 Copyright k1LoW, https://github.com/k1LoW/animNumber
+Derived from:
+    Klee One - https://github.com/fontworks-fonts/Klee
+    Copyright 2020 The Klee Project Authors
+You can redistribute and/or modify this file under the terms of the SIL Open Font License, Version 1.1
+as published by SIL International.
+You should have received a copy of this license along with this file.
+If not, see https://openfontlicense.org/.
+-->
+<svg id="z65297" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	stroke-linejoin:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z65297d1" d="M555 300L555 734Q555 742 555 758Q554 773 554 787Q554 802 554 809Q554 820 568 826Q582 832 594 832Q607 832 607 824Q607 812 607 794Q606 776 606 758Q606 740 606 729L606 314Q606 295 608 280Q611 264 611 254Q611 242 600 232Q588 222 579 222Q573 222 566 229Q559 235 552 242Q546 249 543 252Q522 268 489 287Q455 306 423 317Q413 321 413 326Q413 333 425 339Q437 345 449 345Q458 345 478 337Q498 330 520 320Q541 309 555 300Z"/>
+<defs>
+	<clipPath id="z65297c1"><use href="#z65297d1"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z65297c1)" d="M433 320L499 270L575 230L575 820"/>
+</svg>

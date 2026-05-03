@@ -1,0 +1,38 @@
+<!--
+animNumber 2026 Copyright k1LoW, https://github.com/k1LoW/animNumber
+Derived from:
+    Klee One - https://github.com/fontworks-fonts/Klee
+    Copyright 2020 The Klee Project Authors
+You can redistribute and/or modify this file under the terms of the SIL Open Font License, Version 1.1
+as published by SIL International.
+You should have received a copy of this license along with this file.
+If not, see https://openfontlicense.org/.
+-->
+<svg id="z65298" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	stroke-linejoin:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z65298d1" d="M324 826L328 826Q350 822 366 821Q382 819 399 818Q416 817 439 817Q463 816 500 816Q539 816 577 816Q615 816 644 818Q669 819 691 821Q714 823 722 823Q735 823 735 810Q735 798 726 785Q716 771 705 771Q695 771 676 772Q657 773 644 773Q615 773 579 772Q542 771 506 771Q489 771 460 772Q431 772 402 773Q373 775 354 776Q390 724 444 671Q497 617 569 566Q639 514 680 465Q721 417 721 359Q721 295 675 257Q629 220 540 220Q463 220 414 247Q365 274 331 324Q325 332 325 340Q325 354 336 364Q347 374 355 374Q363 374 368 368Q373 361 376 355Q399 310 438 287Q477 265 539 265Q604 265 636 291Q668 317 668 359Q668 405 631 444Q593 484 531 531Q480 568 438 609Q395 649 363 685Q331 722 313 750Q309 756 303 762Q297 767 291 776Q289 779 289 786Q289 798 299 812Q308 826 324 826Z"/>
+<defs>
+	<clipPath id="z65298c1"><use href="#z65298d1"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z65298c1)" d="M345 320L400 270L466 240L543 240L608 270L652 320L663 370L641 430L576 500L488 580L400 670L334 750L302 800L422 810L565 810L718 800"/>
+</svg>

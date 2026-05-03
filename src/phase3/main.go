@@ -203,6 +203,28 @@ func clipToOutlineID(clip string) string {
 	return strings.Replace(clip, "c", "d", 1)
 }
 
+// listSVGCodepoints returns codepoints of every "<int>.svg" in svgDir.
+func listSVGCodepoints() ([]int, error) {
+	entries, err := os.ReadDir(svgDir)
+	if err != nil {
+		return nil, err
+	}
+	var cps []int
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".svg") {
+			continue
+		}
+		base := strings.TrimSuffix(e.Name(), ".svg")
+		cp, err := strconv.Atoi(base)
+		if err != nil {
+			continue
+		}
+		cps = append(cps, cp)
+	}
+	sort.Ints(cps)
+	return cps, nil
+}
+
 type partRow struct {
 	Phase   int
 	Part    string
@@ -262,8 +284,13 @@ func main() {
 	}
 	defer f.Close()
 
+	cps, err := listSVGCodepoints()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error listing %s: %v\n", svgDir, err)
+		os.Exit(1)
+	}
 	var allProblems []string
-	for cp := 48; cp <= 57; cp++ {
+	for _, cp := range cps {
 		path := filepath.Join(svgDir, fmt.Sprintf("%d.svg", cp))
 		rows, err := processSVG(path)
 		if err != nil {

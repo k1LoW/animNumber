@@ -4,3 +4,5 @@ demo/public/svgsNumber/
 plans/
 tmp/
 svgsNumber/debug/
+.DS_Store
+*.af~lock~

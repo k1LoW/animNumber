@@ -165,12 +165,39 @@ func pathLength(pts [][2]float64) float64 {
 	return total
 }
 
+// listSVGCodepoints returns codepoints of every "<int>.svg" in svgDir.
+func listSVGCodepoints() ([]int, error) {
+	entries, err := os.ReadDir(svgDir)
+	if err != nil {
+		return nil, err
+	}
+	var cps []int
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".svg") {
+			continue
+		}
+		base := strings.TrimSuffix(e.Name(), ".svg")
+		cp, err := strconv.Atoi(base)
+		if err != nil {
+			continue
+		}
+		cps = append(cps, cp)
+	}
+	sort.Ints(cps)
+	return cps, nil
+}
+
 func main() {
 	if err := os.MkdirAll(debugDir, 0o755); err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating %s: %v\n", debugDir, err)
 		os.Exit(1)
 	}
-	for cp := 48; cp <= 57; cp++ {
+	cps, err := listSVGCodepoints()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error listing %s: %v\n", svgDir, err)
+		os.Exit(1)
+	}
+	for _, cp := range cps {
 		in := filepath.Join(svgDir, fmt.Sprintf("%d.svg", cp))
 		out := filepath.Join(debugDir, fmt.Sprintf("%d.svg", cp))
 		svg, err := processSVG(in)
