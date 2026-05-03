@@ -180,9 +180,9 @@ var digitMedians = []DigitMedians{
 			// down the left wall, waist X-crossing, down right wall of
 			// lower loop, to bottom-mid [490, 80]. Ends here so that
 			// b's visible portion picks up exactly where a finishes
-			// (animCJK dual-clip pattern). LeadOut [-700, 80] lengthens
-			// a's SVG path so the visible right S finishes around 43%
-			// of the 0.8s animation, before b's left S becomes visible.
+			// (animCJK dual-clip pattern). LeadOut [-260, 80] lengthens
+			// a's SVG path so a's visible right S finishes at ~60% of
+			// the 0.8s animation, matching b's visible-portion start.
 			{Letter: "a",
 				Median: []Point{
 					{640, 620}, {610, 650}, {510, 650}, {430, 650}, {400, 620},
@@ -190,15 +190,22 @@ var digitMedians = []DigitMedians{
 					{550, 390}, {620, 360}, {660, 300}, {680, 230}, {660, 160},
 					{610, 110}, {490, 80},
 				},
-				LeadOut: []Point{{-700, 80}},
+				LeadOut: []Point{{-260, 80}},
 			},
-			// b: vertical off-canvas lead-in from [490, -420] (≤500
-			// outside bbox) keeps b invisible until a finishes its right
-			// S at the bottom-mid pickup [490, 80]. b then traces the
-			// LEFT wall of the lower loop UP, through the waist
-			// X-crossing up-right, ending at the upper-right tab.
+			// b: off-canvas lead-in via [-160, -420] -> [200, -420] ->
+			// [490, -420] -> [490, 80] (all points within ≤500 of bbox).
+			// Lead-in length is sized so b's visible-portion starting
+			// fraction (= lead-in / median total) exceeds a's median
+			// length / b's median length, guaranteeing b's visible left S
+			// only begins after a's visible right S has finished — both
+			// in the SVG's concurrent --d:1s animation and in kakitori's
+			// strokeGroup playback (where each path's duration is
+			// proportional to its median length, see Kakitori.ts:710).
+			// After picking up at [490, 80], b traces the LEFT wall of
+			// the lower loop UP, through the waist X-crossing up-right,
+			// ending at the upper-right tab.
 			{Letter: "b", Median: []Point{
-				{490, -420}, {490, 80},
+				{-160, -420}, {200, -420}, {490, -420}, {490, 80},
 				{440, 80}, {380, 110}, {350, 170}, {340, 230}, {340, 290},
 				{360, 350}, {410, 380}, {460, 410}, {530, 430}, {580, 460},
 				{620, 490}, {660, 510}, {680, 540}, {685, 570},
@@ -224,13 +231,16 @@ var digitMedians = []DigitMedians{
 				},
 				LeadOut: []Point{{420, -968}},
 			},
-			// b: vertical off-canvas lead-in from [440, -180] keeps b
-			// invisible until a finishes bowl. b then traces the closure
-			// up to the upper-right corner [680, 650] — where c's
-			// visible portion picks up.
+			// b: vertical off-canvas lead-in from [440, -350] (≤500 below
+			// bbox) keeps b invisible until a finishes bowl. Lead-in
+			// length 670 > a's median length 644 so b's visible-portion
+			// starts after a's visible bowl ends in kakitori's
+			// strokeGroup playback (Kakitori.ts:710). b then traces the
+			// closure up to the upper-right corner [680, 650] — where
+			// c's visible portion picks up.
 			{Letter: "b",
 				Median: []Point{
-					{440, -180},
+					{440, -350},
 					{440, 320}, {490, 320}, {530, 350}, {560, 380}, {580, 410},
 					{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
 					{685, 620}, {680, 650},
