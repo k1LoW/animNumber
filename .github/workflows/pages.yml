@@ -6,7 +6,7 @@ on:
     paths:
       - demo/**
       - svgsNumber/**
-      - phase2/**
+      - src/**
       - graphicsNumber.txt
   workflow_dispatch:
 
@@ -32,7 +32,7 @@ jobs:
         with:
           go-version-file: go.mod
 
-      - run: go run ./phase2
+      - run: go run ./src/phase2
 
       - run: mkdir -p demo/public && cp -r svgsNumber demo/public/svgsNumber
 
