@@ -86,31 +86,15 @@ Adjust `LeadOut` (SVG-only) so that consecutive parts' visible windows abut with
 | earlier parts (a, b for "9") | one point off-canvas, length tuned so visibleEnd% matches next part's visibleStart% |
 | last part (c for "9", b for "8") | usually empty — its `Median` already ends at the digit's natural end |
 
-## Verification snippet
+## Verification
 
-```python
-import json, math
-with open('graphicsNumber.txt') as f:
-    for line in f:
-        e = json.loads(line)
-        if e['character'] not in '89': continue
-        meds = e['medians']
-        totals = [sum(math.hypot(m[i+1][0]-m[i][0], m[i+1][1]-m[i][1])
-                       for i in range(len(m)-1)) for m in meds]
-        # leadIn = sum of segments from start up to first on-canvas point
-        def leadin(m):
-            for i, p in enumerate(m):
-                if 0 <= p[0] <= 1024 and -124 <= p[1] <= 900:
-                    return sum(math.hypot(m[j+1][0]-m[j][0], m[j+1][1]-m[j][1])
-                               for j in range(i)) if i > 0 else 0
-            return 0
-        leadins = [leadin(m) for m in meds]
-        for i in range(len(totals)-1):
-            ok = '✓' if leadins[i+1] >= totals[i] else '✗ kakitori OVERLAP'
-            print(f'{e["character"]} d{i}->d{i+1}: leadIn={leadins[i+1]:.0f} >= total(prev)={totals[i]:.0f} {ok}')
-```
+`src/phase3` prints heuristic timing notes (`leadIn(B) vs total(A)`) for every multi-path stroke group after writing graphicsNumber.txt. Those notes will flag the full-trajectory `medians[0]` convention as "violating" `leadIn >= total` — that's expected and informational only. The exact invariant is `leadIn(B) >= visible_portion_of(A in clip_A)`, which requires polygon intersection that phase3 doesn't compute.
 
-Run after every edit. Both inequalities must hold.
+To verify correctness in practice:
+
+1. Watch the animNumber preview (`cd demo && npm run dev`). Multi-path digits should draw as one continuous stroke without mid-stroke gaps or overlaps.
+2. Run kakitori's quiz on each multi-path digit (0, 3, 6, 8, 9). A user drawing the digit in **one continuous stroke** should match `medians[0]`.
+3. Confirm the matching reference glyphs in animCJK behave the same: `あ` (U+3042 in `graphicsJaKana.txt`) and `ね` (U+306D in `graphicsJa.txt`) — these are the canonical examples of `medians[0]` = full single-stroke trajectory with subsequent splits providing only animation timing.
 
 ## Stroke counts (do not change without README updates)
 
