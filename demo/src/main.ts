@@ -1,10 +1,16 @@
 const grid = document.getElementById("grid")!;
 const replayBtn = document.getElementById("replay-btn")!;
 
-const DIGITS = Array.from({ length: 10 }, (_, i) => ({
-  char: String(i),
-  code: 48 + i,
-}));
+const DIGITS = [
+  ...Array.from({ length: 10 }, (_, i) => ({
+    char: String(i),
+    code: 48 + i,
+  })),
+  ...Array.from({ length: 10 }, (_, i) => ({
+    char: String.fromCodePoint(0xff10 + i),
+    code: 0xff10 + i,
+  })),
+];
 
 async function fetchSVG(code: number): Promise<string> {
   const resp = await fetch(`./svgsNumber/${code}.svg`);
