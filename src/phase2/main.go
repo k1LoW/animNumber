@@ -41,30 +41,24 @@ const outDir = "svgsNumber"
 var digitMedians = []DigitMedians{
 	{Char: '0', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: visible left arc only (Median ends at [510, 85] — the
-			// bottom-mid where d1b's lead-in picks up). The right side +
-			// top + wedge tracing is in LeadOut so animNumber's preview
-			// keeps the full CCW visualisation, while phase3 strips it
-			// from graphicsNumber.txt to keep total(a) short enough that
-			// kakitori's leadIn(b) >= total(a) invariant holds.
-			{Letter: "a",
-				Median: []Point{
-					{415, 630}, {380, 580}, {360, 500}, {350, 380},
-					{370, 270}, {410, 180}, {470, 110}, {510, 85},
-				},
-				// Single off-canvas marker; length tuned so d1a SVG total
-				// (Median + LeadOut) makes d1a's visible-portion-end fraction
-				// match d1b's visible-portion-start fraction within the
-				// concurrent --d:1s preview animation. d1b covers the right
-				// arc + top + wedge so dropping the post-Median trace from
-				// d1a doesn't lose any visible coverage.
-				LeadOut: []Point{{510, -729}},
-			},
-			// b: off-canvas lead-in (extended to [-150, 85] so leadIn=660
-			// >= total(d1a)=613 satisfies the kakitori timing invariant).
-			// The final two points {425, 625}, {405, 555} trace into the
-			// upper-left wedge of c1b so the stroke covers that thin
-			// closure region.
+			// a: full CCW loop trajectory (animCJK "あ"-stroke-3 / kana "ね"
+			// convention). kakitori's strokeMatches compares the user's
+			// 1-stroke drawing against medians[0], so m_a must trace the
+			// whole "0" centerline (clip c1a covers left half + closure
+			// wedge — only that subset draws visibly, but the median data
+			// itself is the full trajectory).
+			{Letter: "a", Median: []Point{
+				{415, 630}, {380, 580}, {360, 500}, {350, 380},
+				{370, 270}, {410, 180}, {470, 110}, {510, 85},
+				{580, 110}, {620, 170}, {650, 250}, {660, 380},
+				{650, 500}, {620, 600}, {580, 660}, {512, 680},
+				{450, 670}, {415, 630}, {405, 555},
+			}},
+			// b: off-canvas lead-in delays b's visible drawing until
+			// after a's first visible portion (left arc, ~614 units)
+			// finishes. The final two points {425, 625}, {405, 555} trace
+			// into the upper-left wedge of c1b so the stroke covers that
+			// thin closure region.
 			{Letter: "b", Median: []Point{
 				{-150, 85}, {510, 85}, {580, 110}, {620, 170},
 				{650, 250}, {660, 380}, {650, 500}, {620, 600},
@@ -92,29 +86,34 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '3', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: upper bump CCW from upper-left, around top, down to the
-			// middle pinch [480, 410]. Off-canvas LeadOut [480, -207]
-			// lengthens the SVG path so d1a's visible upper-bump finishes
-			// at ~50% (= d1b's visible-portion start) within the
-			// concurrent --d:1s preview animation. b covers the lower
-			// bump, including the lower-left curl tail.
-			{Letter: "a",
-				Median: []Point{
-					{380, 610}, {430, 650}, {520, 650}, {590, 630}, {640, 600},
-					{650, 540}, {650, 470}, {620, 430}, {570, 410}, {480, 410},
-				},
-				LeadOut: []Point{{480, -207}},
-			},
-			// b: long vertical lead-in from above the canvas keeps b
-			// invisible until a finishes the upper bump, then b traces
-			// the lower bump CW around to the lower-left curl tail.
-			// Final point shared with a (animCJK pattern).
-			{Letter: "b", Median: []Point{
-				{480, 1149},
-				{480, 410}, {550, 390}, {620, 360}, {670, 310}, {680, 240},
+			// a: full single-stroke "3" trajectory (upper bump CCW from
+			// upper-left, around top, down to the middle pinch, then
+			// CW around the lower bump to the lower-left curl tail).
+			// kakitori matches the user's drawing against medians[0] so
+			// m_a must be the whole "3" centerline. Clip c1a covers only
+			// the upper bump — the lower-bump portion of m_a draws into
+			// c1b's territory and is occluded by c1a.
+			{Letter: "a", Median: []Point{
+				{380, 610}, {430, 650}, {520, 650}, {590, 630}, {640, 600},
+				{650, 540}, {650, 470}, {620, 430}, {570, 410}, {480, 410},
+				{550, 390}, {620, 360}, {670, 310}, {680, 240},
 				{660, 170}, {610, 110}, {520, 90}, {430, 100}, {370, 140},
 				{340, 170},
 			}},
+			// b: off-canvas lead-in keeps b invisible until a finishes
+			// drawing the upper bump (~617 units). LeadOut on b balances
+			// b's SVG length against a's so the concurrent --d:1s preview
+			// animation has b's visible lower-bump pick up where a's
+			// visible upper-bump finishes.
+			{Letter: "b",
+				Median: []Point{
+					{480, 1149},
+					{480, 410}, {550, 390}, {620, 360}, {670, 310}, {680, 240},
+					{660, 170}, {610, 110}, {520, 90}, {430, 100}, {370, 140},
+					{340, 170},
+				},
+				LeadOut: []Point{{-166, 170}},
+			},
 		}},
 	}},
 	{Char: '4', Phases: []Phase{
@@ -148,30 +147,23 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '6', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: visible left arc + tail through bottom-mid (Median ends
-			// at [490, 80]). The remaining right-half + closure trace is
-			// moved to LeadOut (with off-canvas marker [-210, 80]) so
-			// graphicsNumber.txt's total(a) stays short enough that
-			// kakitori's leadIn(b) >= total(a) invariant holds, while
-			// the SVG path d-attribute (Median + LeadOut) keeps the
-			// concurrent --d:1s preview animation in sync.
-			{Letter: "a",
-				Median: []Point{
-					{570, 660}, {490, 580}, {430, 480}, {380, 380},
-					{340, 290}, {320, 220}, {350, 150}, {410, 100},
-					{490, 80},
-				},
-				// Single off-canvas marker; length tuned so d1a's
-				// visible-portion-end fraction matches d1b's
-				// visible-portion-start fraction in the concurrent
-				// --d:1s preview animation. d1b covers the right side +
-				// closure + bowl interior so dropping that trace from
-				// d1a doesn't lose any visible coverage.
-				LeadOut: []Point{{-202, 80}},
-			},
-			// b: off-canvas lead-in (extended to [-200, 100] so leadIn=770
-			// >= total(d1a)=750 satisfies the kakitori timing invariant).
-			// Endpoint at the lower-left bowl-interior junction.
+			// a: full single-stroke "6" trajectory (upper-right tail,
+			// down-left through left side, around the bottom, up the
+			// right side, closing into the bowl interior at the lower-
+			// left junction). kakitori matches the user's drawing
+			// against medians[0] so m_a must trace the whole "6"
+			// centerline. Clip c1a covers left half + tail — the
+			// right-half portion of m_a is occluded.
+			{Letter: "a", Median: []Point{
+				{570, 660}, {490, 580}, {430, 480}, {380, 380},
+				{340, 290}, {320, 220}, {350, 150}, {410, 100},
+				{490, 80}, {570, 100}, {640, 140}, {680, 220},
+				{680, 290}, {640, 370}, {570, 420}, {490, 430},
+				{420, 405}, {390, 380}, {350, 340},
+			}},
+			// b: off-canvas lead-in keeps b invisible until a's first
+			// visible portion (tail through bottom-mid, ~750 units)
+			// finishes.
 			{Letter: "b", Median: []Point{
 				{-200, 100}, {570, 100}, {640, 140}, {680, 220},
 				{680, 290}, {640, 370}, {570, 420}, {490, 430},
@@ -196,31 +188,28 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '8', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: right S — upper-right tab, CCW around upper loop top,
-			// down the left wall, waist X-crossing, down right wall of
-			// lower loop, to bottom-mid [490, 80]. Ends here so that
-			// b's visible portion picks up exactly where a finishes
-			// (animCJK dual-clip pattern). LeadOut [-260, 80] lengthens
-			// a's SVG path so a's visible right S finishes at ~60% of
-			// the 0.8s animation, matching b's visible-portion start.
-			{Letter: "a",
-				Median: []Point{
-					{640, 620}, {610, 650}, {510, 650}, {430, 650}, {400, 620},
-					{370, 560}, {360, 500}, {380, 450}, {420, 420}, {490, 400},
-					{550, 390}, {620, 360}, {660, 300}, {680, 230}, {660, 160},
-					{610, 110}, {490, 80},
-				},
-				LeadOut: []Point{{-260, 80}},
-			},
+			// a: full figure-8 trajectory (right S — upper-right tab CCW
+			// around the upper loop, down the left wall through the
+			// waist X-crossing, down the right wall of the lower loop to
+			// the bottom-mid; then continuing left across the bottom and
+			// up the left wall of the lower loop, back through the waist
+			// to the upper-right tab). kakitori matches the user's
+			// drawing against medians[0] so m_a must trace the whole
+			// figure-8 centerline. Clip c1a covers the right S region —
+			// the left S portion of m_a draws into c1b's territory and
+			// is occluded by c1a.
+			{Letter: "a", Median: []Point{
+				{640, 620}, {610, 650}, {510, 650}, {430, 650}, {400, 620},
+				{370, 560}, {360, 500}, {380, 450}, {420, 420}, {490, 400},
+				{550, 390}, {620, 360}, {660, 300}, {680, 230}, {660, 160},
+				{610, 110}, {490, 80}, {440, 80},
+				{380, 110}, {350, 170}, {340, 230}, {340, 290}, {360, 350},
+				{410, 380}, {460, 410}, {530, 430}, {580, 460}, {620, 490},
+				{660, 510}, {680, 540}, {685, 570},
+			}},
 			// b: off-canvas lead-in via [-160, -420] -> [200, -420] ->
-			// [490, -420] -> [490, 80] (all points within ≤500 of bbox).
-			// Lead-in length is sized so b's visible-portion starting
-			// fraction (= lead-in / median total) exceeds a's median
-			// length / b's median length, guaranteeing b's visible left S
-			// only begins after a's visible right S has finished — both
-			// in the SVG's concurrent --d:1s animation and in kakitori's
-			// strokeGroup playback (where each path's duration is
-			// proportional to its median length, see Kakitori.ts:710).
+			// [490, -420] -> [490, 80] keeps b invisible until a's
+			// first visible portion (right S, ~1119 units) finishes.
 			// After picking up at [490, 80], b traces the LEFT wall of
 			// the lower loop UP, through the waist X-crossing up-right,
 			// ending at the upper-right tab.
@@ -234,33 +223,30 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '9', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// Each path ends at its own visible-end point so the next
-			// part's lead-in picks up exactly there (animCJK dual-clip
-			// pattern — see also "8"). LeadOut on a/b lengthens the SVG
-			// stroke-dashoffset path so the visible drawings sequence
-			// (bowl 0-32%, closure 33-63%, descender 67-100%) within the
-			// 0.8s animation. LeadOut is stripped from graphicsNumber.txt.
-			//
-			// a: bowl CCW from upper-right around to bowl-bottom,
-			// ending at [420, 320] — where b's visible portion picks up.
-			{Letter: "a",
-				Median: []Point{
-					{640, 600}, {570, 660}, {490, 670}, {420, 660}, {370, 620},
-					{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
-					{420, 320},
-				},
-				// LeadOut tuned so d1a's visible-portion-end fraction
-				// matches d1b's visible-portion-start fraction in the
-				// concurrent --d:1s preview animation.
-				LeadOut: []Point{{420, -582}},
-			},
-			// b: vertical off-canvas lead-in from [440, -350] (≤500 below
-			// bbox) keeps b invisible until a finishes bowl. Lead-in
-			// length 670 > a's median length 644 so b's visible-portion
-			// starts after a's visible bowl ends in kakitori's
-			// strokeGroup playback (Kakitori.ts:710). b then traces the
-			// closure up to the upper-right corner [680, 650] — where
-			// c's visible portion picks up.
+			// a: full single-stroke "9" trajectory (bowl CCW from
+			// upper-right around to bowl-bottom, then up the closure to
+			// the upper-right corner, then down the descender to the
+			// foot). kakitori matches the user's drawing against
+			// medians[0] so m_a must trace the whole "9" centerline.
+			// Clip c1a covers only the bowl — closure + descender
+			// portions of m_a draw into c1b/c1c's territory and are
+			// occluded by c1a.
+			{Letter: "a", Median: []Point{
+				{640, 600}, {570, 660}, {490, 670}, {420, 660}, {370, 620},
+				{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
+				{420, 320}, {440, 320}, {490, 320}, {530, 350}, {560, 380},
+				{580, 410}, {620, 440}, {640, 470}, {660, 500}, {680, 540},
+				{685, 580}, {685, 620}, {680, 650}, {665, 580}, {650, 510},
+				{640, 440}, {625, 380}, {615, 310}, {610, 240}, {605, 170},
+				{595, 100}, {585, 50},
+			}},
+			// b: vertical off-canvas lead-in from [440, -350] keeps b
+			// invisible until a's first visible portion (bowl, ~645
+			// units) finishes. b then traces the closure up to the
+			// upper-right corner [680, 650]. LeadOut balances b's SVG
+			// length against a's so the concurrent --d:1s preview
+			// animation has b's visible closure pick up where a's
+			// visible bowl finishes, and end at c's visible-start.
 			{Letter: "b",
 				Median: []Point{
 					{440, -350},
@@ -268,19 +254,21 @@ var digitMedians = []DigitMedians{
 					{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
 					{685, 620}, {680, 650},
 				},
-				// LeadOut tuned so d1b's visible-portion-end fraction
-				// matches d1c's visible-portion-start fraction.
-				LeadOut: []Point{{1160, 650}},
+				LeadOut: []Point{{1365, 650}},
 			},
 			// c: off-canvas left lead-in via [-150, 50] -> [-150, 650] ->
-			// [680, 650] (≤500 outside bbox) keeps c invisible until b
-			// finishes closure (~70%). c then traces the descender down
-			// to the foot [585, 50].
-			{Letter: "c", Median: []Point{
-				{-150, 50}, {-150, 650},
-				{680, 650}, {665, 580}, {650, 510}, {640, 440}, {625, 380},
-				{615, 310}, {610, 240}, {605, 170}, {595, 100}, {585, 50},
-			}},
+			// [680, 650] keeps c invisible until b's visible closure
+			// finishes. c then traces the descender down to the foot
+			// [585, 50]. LeadOut balances c's SVG length so its visible
+			// descender picks up where b's visible closure finishes.
+			{Letter: "c",
+				Median: []Point{
+					{-150, 50}, {-150, 650},
+					{680, 650}, {665, 580}, {650, 510}, {640, 440}, {625, 380},
+					{615, 310}, {610, 240}, {605, 170}, {595, 100}, {585, 50},
+				},
+				LeadOut: []Point{{585, -217}},
+			},
 		}},
 	}},
 }

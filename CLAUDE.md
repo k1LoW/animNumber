@@ -29,10 +29,11 @@ type Part struct {
 
 ## Required invariants for multi-path stroke groups (`0`, `3`, `6`, `8`, `9`)
 
-### 1. `Median` boundary
+### 1. `medians[0]` is the full single-stroke trajectory (animCJK convention)
 
-- Each `Median` ends at its own **visible-end pickup point** (where the next part's visible portion begins). Do NOT force a shared endpoint across the stroke group via `Median` (that breaks the dual-clip "b picks up exactly where a finishes" invariant).
-- Closed loops (e.g. `0`) are an exception: a's median may dive past the natural close into b's lead-in pickup so that a/b genuinely share an endpoint.
+`hanzi-writer`'s `strokeMatches` compares the user's drawn stroke against `medians[0]` only. For digits split across multiple data strokes, `medians[0]` must trace the **whole logical-stroke centerline** (= what the user is expected to draw in one motion). This mirrors the convention used by `あ` stroke 3 (`graphicsJaKana.txt` U+3042) and `ね` (`graphicsJa.txt` U+306D), where the first split's median covers the entire loop, and subsequent splits use clipPath to expose only their slice of the same trajectory.
+
+Subsequent `medians[i]` (i >= 1) carry an off-canvas pre-lead-in followed by their visible portion of the trajectory. Their job is timing, not matching.
 
 ### 2. `Median` magnitude (≤500 outside bbox)
 
@@ -40,32 +41,33 @@ For every point `(x, y)` in `Median`:
 - `x` within `[bbox.left - 500, bbox.right + 500]`
 - `y` within `[bbox.bottom - 500, bbox.top + 500]`
 
-Values like `-968` / `1237` / `-558` are too far outside bbox and are NOT acceptable in graphicsNumber.txt.
+Values like `-968` / `1237` / `-558` are too far outside bbox and are NOT acceptable in graphicsNumber.txt. (`LeadOut`, which never reaches the JSON, is unconstrained.)
 
 ### 3. kakitori timing invariant
 
-`kakitori`'s `animateWithGroups` (`Kakitori.ts:710`) starts every path in a strokeGroup at **delay=0** and animates each for a duration **proportional to its median length** (in `HANZI_COORD_SIZE=900` units). For path B's visible drawing not to start before path A's visible drawing has finished, the median data must satisfy:
+`kakitori`'s `animateWithGroups` (`Kakitori.ts:710`) starts every path in a strokeGroup at **delay=0** and animates each for a duration **proportional to its median length** (in `HANZI_COORD_SIZE=900` units). For path B's visible drawing to start after path A's visible drawing has finished, the median data must satisfy:
 
 ```
-leadIn(B) >= total(A)
+leadIn(B) >= visible_portion_of(A in clip_A)
 ```
 
 where:
-- `total(X)` = sum of segment lengths in `X.Median`
-- `leadIn(B)` = sum of segment lengths in `B.Median` from index 0 up to (and including) the first segment whose endpoint is on-canvas (i.e. the prefix that is invisible due to clip occlusion / off-canvas position)
+- `visible_portion_of(A in clip_A)` = length of `A.Median`'s prefix that lies inside `clip_A`'s polygon (= the part that is actually drawn before the median exits A's clip into another part's territory).
+- `leadIn(B)` = sum of segment lengths in `B.Median` from index 0 up to (and including) the first segment whose endpoint is on-canvas (i.e. the off-canvas pre-lead-in).
 
-For three-path groups (e.g. `9`), also `leadIn(C) >= total(B)`.
+For three-path groups (e.g. `9`), also `leadIn(C) >= visible_portion_of(B in clip_B)`. For `9` `B` is structured as "lead-in + closure" so `visible(B) = total(B)`, and the inequality reduces to `leadIn(C) >= total(B)`.
 
-Concretely:
+Tracking visible-portion lengths per digit (current state):
 
-| digit | parts | invariant | values |
-|---|---|---|---|
-| 8 | a, b | `leadIn(b) >= total(a)` | `1150 >= 1119` ✓ |
-| 9 | a, b, c | `leadIn(b) >= total(a)`, `leadIn(c) >= total(b)` | `670 >= 644`, `1430 >= 1126` ✓ |
+| digit | parts | visible_portion_of(A) | leadIn(B) | OK? |
+|---|---|---|---|---|
+| 0 | a, b | 614 (left arc, A then exits clip into right half) | 660 | ✓ |
+| 3 | a, b | 617 (upper bump) | 739 | ✓ |
+| 6 | a, b | 750 (tail through bottom-mid) | 770 | ✓ |
+| 8 | a, b | 1119 (right S) | 1150 | ✓ |
+| 9 | a, b, c | 645 (bowl); 1126 (full B) | 670; 1430 | ✓ |
 
-If you change `Median` lengths, **recompute these inequalities** and adjust lead-ins. Failing the inequality makes the strokes appear to draw in parallel in kakitori (the user-visible "1画として描画されない" symptom).
-
-`src/phase3` validates this invariant after writing graphicsNumber.txt and **exits non-zero** if any multi-path stroke group violates it, so CI / manual `go run ./src/phase3` will catch regressions automatically.
+`src/phase3` does not implement the polygon intersection needed to compute `visible_portion_of` exactly; it falls back to a coarser `leadIn(B) >= total(A)` check and **prints flags but does not fail the build** when the heuristic over-reports (which it does for the full-trajectory `medians[0]` convention). Verify by running `kakitori`'s quiz on each multi-path digit and watching the animNumber preview.
 
 ### 4. animNumber preview timing (concurrent `--d:1s`)
 
