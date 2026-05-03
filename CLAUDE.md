@@ -1,24 +1,26 @@
 # CLAUDE.md
 
-Repo-specific notes for editing `phase2/main.go` median data and keeping `graphicsNumber.txt` correct for both **animNumber's own SVG preview** and the downstream **`hanzi-writer-data-jp` / `kakitori`** consumer.
+Repo-specific notes for editing `src/phase2/main.go` median data and keeping `graphicsNumber.txt` correct for both **animNumber's own SVG preview** and the downstream **`hanzi-writer-data-jp` / `kakitori`** consumer.
 
 ## Workflow
 
 ```sh
-go run ./phase2   # rewrites svgsNumber/*.svg from digitMedians (preserves manual outline edits)
-go run ./phase3   # rewrites graphicsNumber.txt from svgsNumber/*.svg
+go run ./src/phase2   # rewrites svgsNumber/*.svg from digitMedians (preserves manual outline edits)
+go run ./src/phase3   # rewrites graphicsNumber.txt from svgsNumber/*.svg
 cp svgsNumber/*.svg demo/public/svgsNumber/   # demo/public/ is gitignored, manual sync
 ```
 
 After editing `digitMedians` always run phase2 → phase3 → sync. The dev preview (`cd demo && npm run dev`) auto-reloads.
 
-## Data model: `Part` in `phase2/main.go`
+`src/glyphs/` holds Affinity Designer source files (`*.af`) and their SVG exports (`*.af.svg`) for digits whose outlines were hand-edited away from Klee One — open these in Affinity to update the outline, export to SVG, and paste the new outline `d=` into the matching `svgsNumber/*.svg` `<path id>` before running phase2.
+
+## Data model: `Part` in `src/phase2/main.go`
 
 ```go
 type Part struct {
     Letter  string  // "" / "a" / "b" / "c"
     Median  []Point // centerline output to graphicsNumber.txt as-is
-    LeadOut []Point // SVG-only points appended after Median in the SVG d-attribute; stripped from graphicsNumber.txt by phase3's flipMedian
+    LeadOut []Point // SVG-only points appended after Median in the SVG d-attribute; stripped from graphicsNumber.txt by src/phase3/flipMedian
 }
 ```
 

@@ -10,9 +10,10 @@ Animated SVGs of Arabic numerals (0-9) in [animCJK](https://github.com/parsimonh
 
 - `svgsNumber/` — generated SVG files, one per digit (named by Unicode codepoint, e.g. `48.svg` for "0")
 - `graphicsNumber.txt` — animCJK-format graphics data (one JSON line per digit), derived from the SVGs via phase3
-- `phase1/` — bootstraps SVGs (and an initial `graphicsNumber.txt`) from font outlines + median definitions (full regeneration)
-- `phase2/` — preserves manually edited `<path id>` outlines and rebuilds everything else (style, clipPath, median wiring). Run after hand-editing outlines
-- `phase3/` — reads `svgsNumber/*.svg` and rewrites `graphicsNumber.txt` (treating the SVGs as the source of truth, including `d1a`/`d1b`/`d1c` splits). Run after phase2
+- `src/phase1/` — bootstraps SVGs (and an initial `graphicsNumber.txt`) from font outlines + median definitions (full regeneration)
+- `src/phase2/` — preserves manually edited `<path id>` outlines and rebuilds everything else (style, clipPath, median wiring). Run after hand-editing outlines
+- `src/phase3/` — reads `svgsNumber/*.svg` and rewrites `graphicsNumber.txt` (treating the SVGs as the source of truth, including `d1a`/`d1b`/`d1c` splits). Run after phase2
+- `src/glyphs/` — Affinity Designer working files (`*.af`) and their SVG exports (`*.af.svg`) for digits whose outlines were hand-edited away from Klee One
 - `licenses/` — license texts for redistributed font glyph data
 - `demo/` — Vite app for the GitHub Pages site
 - `animCJK.html` (under `demo/public/`) — explainer page for the animCJK SVG structure
@@ -20,9 +21,9 @@ Animated SVGs of Arabic numerals (0-9) in [animCJK](https://github.com/parsimonh
 ## Usage
 
 ```sh
-go run ./phase1   # full regeneration (initial bootstrap)
-go run ./phase2   # preserve outlines, refresh medians/style/clipPath in SVGs
-go run ./phase3   # rebuild graphicsNumber.txt from current SVGs
+go run ./src/phase1   # full regeneration (initial bootstrap)
+go run ./src/phase2   # preserve outlines, refresh medians/style/clipPath in SVGs
+go run ./src/phase3   # rebuild graphicsNumber.txt from current SVGs
 ```
 
 ## Glyph attribution and modifications
