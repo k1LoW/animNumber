@@ -71,12 +71,26 @@ func roundCoord(s string) int {
 	return int(math.Round(f))
 }
 
+// SVG canvas is 0-1024; in source y-up that maps to y in [-124, 900].
+func isOffCanvas(p [2]int) bool {
+	return p[0] < 0 || p[0] > 1024 || p[1] < -124 || p[1] > 900
+}
+
 // flipMedian parses an SVG median d="M x y L x y L x y..." path and returns
-// the points in animCJK source space (y-up). Trailing off-canvas points
-// (which phase2 emits as LeadOut for stroke-dashoffset timing in the SVG)
-// are stripped so graphicsNumber.txt only contains the clean centerline.
-// Leading off-canvas points are kept — they are valid lead-ins that
-// hanzi-writer's dual-clip technique relies on.
+// the points in animCJK source space (y-up). The trailing tail (LeadOut
+// in phase2's Part — used for stroke-dashoffset timing in the SVG only)
+// is stripped so graphicsNumber.txt only contains the clean centerline.
+//
+// LeadOut always begins with at least one off-canvas point (acting as a
+// boundary marker), even when the rest of the LeadOut is on-canvas (e.g.
+// "6" d1a where the post-visible trace stays inside the canvas). The
+// marker lets us locate the centerline / tail boundary: we walk past the
+// leading lead-in (if any), and once we find the first trailing
+// off-canvas point, we strip everything from that index to the end.
+//
+// Leading off-canvas points (the dual-clip lead-in) are kept — kakitori
+// uses them to delay the visible-portion start of subsequent stroke-group
+// members.
 func flipMedian(d string) [][2]int {
 	d = strings.ReplaceAll(d, ",", " ")
 	matches := medSegRe.FindAllStringSubmatch(d, -1)
@@ -86,17 +100,101 @@ func flipMedian(d string) [][2]int {
 		y, _ := strconv.ParseFloat(m[2], 64)
 		pts = append(pts, [2]int{int(math.Round(x)), 900 - int(math.Round(y))})
 	}
-	for len(pts) > 0 {
-		last := pts[len(pts)-1]
-		sx, sy := last[0], last[1]
-		// SVG canvas is 0-1024; in source y-up that maps to y in [-124, 900].
-		offCanvas := sx < 0 || sx > 1024 || sy < -124 || sy > 900
-		if !offCanvas {
+	firstOnCanvas := -1
+	for i, p := range pts {
+		if !isOffCanvas(p) {
+			firstOnCanvas = i
 			break
 		}
-		pts = pts[:len(pts)-1]
+	}
+	if firstOnCanvas < 0 {
+		return pts
+	}
+	for i := firstOnCanvas + 1; i < len(pts); i++ {
+		if isOffCanvas(pts[i]) {
+			pts = pts[:i]
+			break
+		}
 	}
 	return pts
+}
+
+// medianLength returns the sum of segment lengths in a median (in animCJK
+// source units).
+func medianLength(pts [][2]int) float64 {
+	total := 0.0
+	for i := 0; i < len(pts)-1; i++ {
+		dx := float64(pts[i+1][0] - pts[i][0])
+		dy := float64(pts[i+1][1] - pts[i][1])
+		total += math.Sqrt(dx*dx + dy*dy)
+	}
+	return total
+}
+
+// leadInLength returns the length of the leading off-canvas portion of a
+// median (the segments traversed before the median first enters the SVG
+// canvas).
+func leadInLength(pts [][2]int) float64 {
+	firstOn := -1
+	for i, p := range pts {
+		if !isOffCanvas(p) {
+			firstOn = i
+			break
+		}
+	}
+	if firstOn <= 0 {
+		return 0
+	}
+	total := 0.0
+	for i := 0; i < firstOn; i++ {
+		dx := float64(pts[i+1][0] - pts[i][0])
+		dy := float64(pts[i+1][1] - pts[i][1])
+		total += math.Sqrt(dx*dx + dy*dy)
+	}
+	return total
+}
+
+// validateStrokeGroupTiming checks the kakitori timing invariant for each
+// consecutive pair of medians within the stroke group represented by rows
+// (currently every multi-part phase 1 group, since animNumber stroke
+// groups always cover all parts of a single phase). For each pair (a, b)
+// kakitori's animateWithGroups (Kakitori.ts:710) starts both at delay=0
+// and animates each for a duration proportional to its median length.
+// b's visible-portion-start time = leadIn(b) / total(b) * T_b which
+// equals leadIn(b) / scale in absolute time. a's visible-portion-end
+// time (assuming a's median is its full visible portion) = total(a) /
+// scale. Sequential drawing requires leadIn(b) >= total(a).
+//
+// Only multi-part groups (>=2 parts in the same phase) are checked,
+// since single-part strokes have nothing to sequence.
+func validateStrokeGroupTiming(char rune, rows []partRow) []string {
+	groups := map[int][]partRow{}
+	for _, r := range rows {
+		groups[r.Phase] = append(groups[r.Phase], r)
+	}
+	var problems []string
+	phases := make([]int, 0, len(groups))
+	for p := range groups {
+		phases = append(phases, p)
+	}
+	sort.Ints(phases)
+	for _, p := range phases {
+		g := groups[p]
+		if len(g) < 2 {
+			continue
+		}
+		for i := 0; i < len(g)-1; i++ {
+			a, b := g[i], g[i+1]
+			ta := medianLength(a.Median)
+			lb := leadInLength(b.Median)
+			if lb < ta {
+				problems = append(problems,
+					fmt.Sprintf("%s d%d%s -> d%d%s: leadIn(d%d%s)=%.0f < total(d%d%s)=%.0f — kakitori would render this group as overlapping strokes (Kakitori.ts:710)",
+						string(char), p, a.Part, p, b.Part, p, b.Part, lb, p, a.Part, ta))
+			}
+		}
+	}
+	return problems
 }
 
 func clipToOutlineID(clip string) string {
@@ -163,6 +261,7 @@ func main() {
 	}
 	defer f.Close()
 
+	var allProblems []string
 	for cp := 48; cp <= 57; cp++ {
 		path := filepath.Join(svgDir, fmt.Sprintf("%d.svg", cp))
 		rows, err := processSVG(path)
@@ -182,6 +281,18 @@ func main() {
 		line, _ := json.Marshal(entry)
 		fmt.Fprintln(f, string(line))
 		fmt.Printf("Processed %s (%s, %d parts)\n", path, entry.Character, len(rows))
+		if probs := validateStrokeGroupTiming(rune(cp), rows); len(probs) > 0 {
+			allProblems = append(allProblems, probs...)
+		}
 	}
 	fmt.Printf("Written %s\n", graphicsFile)
+
+	if len(allProblems) > 0 {
+		fmt.Fprintln(os.Stderr, "\nKakitori timing invariant violations:")
+		for _, p := range allProblems {
+			fmt.Fprintln(os.Stderr, "  "+p)
+		}
+		fmt.Fprintln(os.Stderr, "\nFor each multi-path stroke group, b's lead-in length (median segments before the path first enters canvas) must be >= a's total median length so kakitori renders the group as a single continuous stroke. See CLAUDE.md.")
+		os.Exit(1)
+	}
 }

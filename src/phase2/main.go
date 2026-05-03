@@ -41,24 +41,32 @@ const outDir = "svgsNumber"
 var digitMedians = []DigitMedians{
 	{Char: '0', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: full CCW loop from upper-left split, traced through left
-			// arc, bottom, right arc, top, back to the split, then a
-			// short dive into the upper-left wedge so a's endpoint
-			// matches b's at [405, 555] (animCJK shared-endpoint rule).
-			{Letter: "a", Median: []Point{
-				{415, 630}, {380, 580}, {360, 500}, {350, 380},
-				{370, 270}, {410, 180}, {470, 110}, {510, 85},
-				{580, 110}, {620, 170}, {650, 250}, {660, 380},
-				{650, 500}, {620, 600}, {580, 660}, {512, 680},
-				{450, 670}, {415, 630}, {405, 555},
-			}},
-			// b: off-canvas lead-in delays b's visible drawing until the
-			// right half. The final two points {425, 625}, {405, 555}
-			// trace into the upper-left wedge of c1b so the stroke
-			// covers that thin closure region — without them the wedge
-			// is left as exposed gray fill.
+			// a: visible left arc only (Median ends at [510, 85] — the
+			// bottom-mid where d1b's lead-in picks up). The right side +
+			// top + wedge tracing is in LeadOut so animNumber's preview
+			// keeps the full CCW visualisation, while phase3 strips it
+			// from graphicsNumber.txt to keep total(a) short enough that
+			// kakitori's leadIn(b) >= total(a) invariant holds.
+			{Letter: "a",
+				Median: []Point{
+					{415, 630}, {380, 580}, {360, 500}, {350, 380},
+					{370, 270}, {410, 180}, {470, 110}, {510, 85},
+				},
+				// Single off-canvas marker; length tuned so d1a SVG total
+				// (Median + LeadOut) makes d1a's visible-portion-end fraction
+				// match d1b's visible-portion-start fraction within the
+				// concurrent --d:1s preview animation. d1b covers the right
+				// arc + top + wedge so dropping the post-Median trace from
+				// d1a doesn't lose any visible coverage.
+				LeadOut: []Point{{510, -729}},
+			},
+			// b: off-canvas lead-in (extended to [-150, 85] so leadIn=660
+			// >= total(d1a)=613 satisfies the kakitori timing invariant).
+			// The final two points {425, 625}, {405, 555} trace into the
+			// upper-left wedge of c1b so the stroke covers that thin
+			// closure region.
 			{Letter: "b", Median: []Point{
-				{-101, 85}, {510, 85}, {580, 110}, {620, 170},
+				{-150, 85}, {510, 85}, {580, 110}, {620, 170},
 				{650, 250}, {660, 380}, {650, 500}, {620, 600},
 				{580, 660}, {512, 680}, {450, 670}, {425, 625},
 				{405, 555},
@@ -85,16 +93,18 @@ var digitMedians = []DigitMedians{
 	{Char: '3', Phases: []Phase{
 		{Number: 1, Parts: []Part{
 			// a: upper bump CCW from upper-left, around top, down to the
-			// middle pinch. Followed by a vertical off-canvas extension
-			// downward so a stays invisible during b's visible portion,
-			// then back up to the shared endpoint at the lower-left curl
-			// (matching b's end).
-			{Letter: "a", Median: []Point{
-				{380, 610}, {430, 650}, {520, 650}, {590, 630}, {640, 600},
-				{650, 540}, {650, 470}, {620, 430}, {570, 410}, {480, 410},
-				{480, -200},
-				{340, 170},
-			}},
+			// middle pinch [480, 410]. Off-canvas LeadOut [480, -207]
+			// lengthens the SVG path so d1a's visible upper-bump finishes
+			// at ~50% (= d1b's visible-portion start) within the
+			// concurrent --d:1s preview animation. b covers the lower
+			// bump, including the lower-left curl tail.
+			{Letter: "a",
+				Median: []Point{
+					{380, 610}, {430, 650}, {520, 650}, {590, 630}, {640, 600},
+					{650, 540}, {650, 470}, {620, 430}, {570, 410}, {480, 410},
+				},
+				LeadOut: []Point{{480, -207}},
+			},
 			// b: long vertical lead-in from above the canvas keeps b
 			// invisible until a finishes the upper bump, then b traces
 			// the lower bump CW around to the lower-left curl tail.
@@ -138,22 +148,32 @@ var digitMedians = []DigitMedians{
 	}},
 	{Char: '6', Phases: []Phase{
 		{Number: 1, Parts: []Part{
-			// a: full single-stroke "6" centerline. Clipped to c1a (left
-			// half + tail), only the first portion (tail through bottom
-			// arc) is visible; the right-half portion is occluded by the
-			// clip. Final point shared with b (animCJK pattern).
-			{Letter: "a", Median: []Point{
-				{570, 660}, {490, 580}, {430, 480}, {380, 380},
-				{340, 290}, {320, 220}, {350, 150}, {410, 100},
-				{490, 80}, {570, 100}, {640, 140}, {680, 220},
-				{680, 290}, {640, 370}, {570, 420}, {490, 430},
-				{420, 405}, {390, 380}, {350, 340},
-			}},
-			// b: off-canvas lead-in delays b's visible right-bowl portion
-			// until a finishes the visible left arc. Capped at -160
-			// (≤500 outside bbox). Endpoint matches a.
+			// a: visible left arc + tail through bottom-mid (Median ends
+			// at [490, 80]). The remaining right-half + closure trace is
+			// moved to LeadOut (with off-canvas marker [-210, 80]) so
+			// graphicsNumber.txt's total(a) stays short enough that
+			// kakitori's leadIn(b) >= total(a) invariant holds, while
+			// the SVG path d-attribute (Median + LeadOut) keeps the
+			// concurrent --d:1s preview animation in sync.
+			{Letter: "a",
+				Median: []Point{
+					{570, 660}, {490, 580}, {430, 480}, {380, 380},
+					{340, 290}, {320, 220}, {350, 150}, {410, 100},
+					{490, 80},
+				},
+				// Single off-canvas marker; length tuned so d1a's
+				// visible-portion-end fraction matches d1b's
+				// visible-portion-start fraction in the concurrent
+				// --d:1s preview animation. d1b covers the right side +
+				// closure + bowl interior so dropping that trace from
+				// d1a doesn't lose any visible coverage.
+				LeadOut: []Point{{-202, 80}},
+			},
+			// b: off-canvas lead-in (extended to [-200, 100] so leadIn=770
+			// >= total(d1a)=750 satisfies the kakitori timing invariant).
+			// Endpoint at the lower-left bowl-interior junction.
 			{Letter: "b", Median: []Point{
-				{-160, 100}, {570, 100}, {640, 140}, {680, 220},
+				{-200, 100}, {570, 100}, {640, 140}, {680, 220},
 				{680, 290}, {640, 370}, {570, 420}, {490, 430},
 				{420, 405}, {390, 380}, {350, 340},
 			}},
@@ -229,7 +249,10 @@ var digitMedians = []DigitMedians{
 					{350, 560}, {340, 480}, {340, 410}, {370, 360}, {400, 330},
 					{420, 320},
 				},
-				LeadOut: []Point{{420, -968}},
+				// LeadOut tuned so d1a's visible-portion-end fraction
+				// matches d1b's visible-portion-start fraction in the
+				// concurrent --d:1s preview animation.
+				LeadOut: []Point{{420, -582}},
 			},
 			// b: vertical off-canvas lead-in from [440, -350] (≤500 below
 			// bbox) keeps b invisible until a finishes bowl. Lead-in
@@ -245,7 +268,9 @@ var digitMedians = []DigitMedians{
 					{620, 440}, {640, 470}, {660, 500}, {680, 540}, {685, 580},
 					{685, 620}, {680, 650},
 				},
-				LeadOut: []Point{{1237, 650}},
+				// LeadOut tuned so d1b's visible-portion-end fraction
+				// matches d1c's visible-portion-start fraction.
+				LeadOut: []Point{{1160, 650}},
 			},
 			// c: off-canvas left lead-in via [-150, 50] -> [-150, 650] ->
 			// [680, 650] (≤500 outside bbox) keeps c invisible until b

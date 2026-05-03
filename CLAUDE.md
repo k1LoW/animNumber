@@ -65,6 +65,8 @@ Concretely:
 
 If you change `Median` lengths, **recompute these inequalities** and adjust lead-ins. Failing the inequality makes the strokes appear to draw in parallel in kakitori (the user-visible "1画として描画されない" symptom).
 
+`src/phase3` validates this invariant after writing graphicsNumber.txt and **exits non-zero** if any multi-path stroke group violates it, so CI / manual `go run ./src/phase3` will catch regressions automatically.
+
 ### 4. animNumber preview timing (concurrent `--d:1s`)
 
 The SVG preview animates every `clip-path` path concurrently for `0.8s`, with `pathLength="3333"` normalizing all paths to the same animated length. The visible-portion timing window for each part is:
