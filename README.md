@@ -39,6 +39,7 @@ The following modifications have been applied to the original glyph outlines:
 - **9**: outline split into three parts (`d1a` / `d1b` / `d1c`) for the bowl + descender, with sequential off-canvas timing so the three medians animate as one continuous stroke.
 - **4, 5**: outline split into physically distinct parts (frame / stem for "4"; top bar / body for "5") so each stroke clips to its own region rather than the full digit silhouette. These are written as 2 strokes (`--d:1s`, `--d:2s`).
 - **7**: a small downward flag was added at the upper-left so the digit can be written as 2 strokes (flag + horizontal-and-diagonal). The original Klee One "7" does not have this flag.
+- **1**: the upper-left calligraphic flag was removed. The simplified outline keeps only a small head at the top of the vertical stroke, so the digit reads as a single straight-down stroke. The original Klee One "1" has a long flag extending to the upper-left.
 
 Stroke counts after these modifications: 0, 1, 2, 3, 6, 8, 9 are 1画 (one-stroke) and 4, 5, 7 are 2画 (two-stroke).
 

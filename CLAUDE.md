@@ -12,7 +12,7 @@ cp svgsNumber/*.svg demo/public/svgsNumber/   # demo/public/ is gitignored, manu
 
 After editing `digitMedians` always run phase2 → phase3 → sync. The dev preview (`cd demo && npm run dev`) auto-reloads.
 
-`src/glyphs/` holds Affinity Designer source files (`*.af`) and their SVG exports (`*.af.svg`) for digits whose outlines were hand-edited away from Klee One — open these in Affinity to update the outline, export to SVG, and paste the new outline `d=` into the matching `svgsNumber/*.svg` `<path id>` before running phase2.
+`src/glyphs/` holds Affinity Designer source files (`*.af`) and their SVG exports (`*.af.svg`) for digits whose outlines were hand-edited away from Klee One — open these in Affinity to update the outline, export to SVG, and paste the new outline `d=` into the matching `svgsNumber/*.svg` `<path id>` before running phase2. Currently hand-edited: `7` / `７` (added an upper-left flag so the digit can be drawn in 2 strokes) and `1` / `１` (removed the upper-left calligraphic flag, leaving only a small head on the vertical). See README for the rationale of each font modification.
 
 ## Data model: `Part` in `src/phase2/main.go`
 

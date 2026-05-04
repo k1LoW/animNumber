@@ -70,7 +70,7 @@ var digitMedians = []DigitMedians{
 	{Char: '1', Phases: []Phase{
 		{Number: 1, Parts: []Part{
 			{Letter: "", Median: []Point{
-				{440, 580}, {500, 630}, {570, 670}, {570, 80},
+				{514, 670}, {514, 80},
 			}},
 		}},
 	}},
@@ -295,7 +295,7 @@ var digitMedians = []DigitMedians{
 	{Char: '１', Phases: []Phase{
 		{Number: 1, Parts: []Part{
 			{Letter: "", Median: []Point{
-				{433, 580}, {499, 630}, {575, 670}, {575, 80},
+				{514, 670}, {514, 80},
 			}},
 		}},
 	}},
