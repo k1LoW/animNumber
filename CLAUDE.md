@@ -35,13 +35,13 @@ type Part struct {
 
 Subsequent `medians[i]` (i >= 1) carry an off-canvas pre-lead-in followed by their visible portion of the trajectory. Their job is timing, not matching.
 
-### 2. `Median` magnitude (≤500 outside bbox)
+### 2. `Median` magnitude (≤600 outside bbox)
 
 For every point `(x, y)` in `Median`:
-- `x` within `[bbox.left - 500, bbox.right + 500]`
-- `y` within `[bbox.bottom - 500, bbox.top + 500]`
+- `x` within `[bbox.left - 600, bbox.right + 600]`
+- `y` within `[bbox.bottom - 600, bbox.top + 600]`
 
-Values like `-968` / `1237` / `-558` are too far outside bbox and are NOT acceptable in graphicsNumber.txt. (`LeadOut`, which never reaches the JSON, is unconstrained.)
+Values like `-968` / `1237` / `-700` are too far outside bbox and are NOT acceptable in graphicsNumber.txt. (`LeadOut`, which never reaches the JSON, is unconstrained.) The threshold is ≤600 because the digits sit at Klee One's native ×1.0 scale; earlier ×0.85 data used ≤500.
 
 ### 3. kakitori timing invariant
 
@@ -61,11 +61,13 @@ Tracking visible-portion lengths per digit (current state):
 
 | digit | parts | visible_portion_of(A) | leadIn(B) | OK? |
 |---|---|---|---|---|
-| 0 | a, b | 614 (left arc, A then exits clip into right half) | 660 | ✓ |
-| 3 | a, b | 617 (upper bump) | 739 | ✓ |
-| 6 | a, b | 750 (tail through bottom-mid) | 770 | ✓ |
-| 8 | a, b | 1119 (right S) | 1150 | ✓ |
-| 9 | a, b, c | 645 (bowl); 1126 (full B) | 670; 1430 | ✓ |
+| 0 | a, b | ≈722 (left arc, A then exits clip into right half) | 777 | ✓ |
+| 3 | a, b | ≈740 (upper bump including hook) | 869 | ✓ |
+| 6 | a, b | ≈882 (tail through bottom-mid) | 906 | ✓ |
+| 8 | a, b | ≈1316 (right S) | 1387 | ✓ |
+| 9 | a, b, c | ≈759 (bowl); ≈1325 (full B) | 788; 1682 | ✓ |
+
+(Values are at Klee One's native ×1.0 scale. They are roughly the previous ×0.85 numbers multiplied by 1/0.85 ≈ 1.176, plus per-digit median tweaks for the cap-coverage fixes.)
 
 `src/phase3` does not implement the polygon intersection needed to compute `visible_portion_of` exactly; it falls back to a coarser `leadIn(B) >= total(A)` check and **prints flags but does not fail the build** when the heuristic over-reports (which it does for the full-trajectory `medians[0]` convention). Verify by running `kakitori`'s quiz on each multi-path digit and watching the animNumber preview.
 
@@ -99,7 +101,7 @@ Conversion: `svg_y = 900 - source_y`. `phase1`/`phase2` apply this when emitting
 
 A point `(x, y)` in source coordinates is **off-canvas** if `x < 0`, `x > 1024`, `y < -124`, or `y > 900`.
 
-The **digit bbox** (x range / y range that the gray fill actually occupies) is roughly `x ∈ [320, 685]`, `y ∈ [50, 680]` for animNumber's Klee-One-derived glyphs — slightly larger than the inked region, smaller than the canvas. Concrete bbox per digit is whatever the outline `d=` describes; eyeball it from `svgsNumber/debug/<cp>.svg` (see "Verification" below).
+The **digit bbox** (x range / y range that the gray fill actually occupies) is roughly `x ∈ [285, 745]`, `y ∈ [-15, 745]` for animNumber's Klee-One-derived glyphs at native ×1.0 scale (baseline at source y=28). Concrete bbox per digit is whatever the outline `d=` describes; eyeball it from `svgsNumber/debug/<cp>.svg` (see "Verification" below).
 
 ## SVG structure
 
