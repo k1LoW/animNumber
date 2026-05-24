@@ -1,0 +1,41 @@
+<!--
+animNumber 2026 Copyright k1LoW, https://github.com/k1LoW/animNumber
+Derived from:
+    Klee One - https://github.com/fontworks-fonts/Klee
+    Copyright 2020 The Klee Project Authors
+You can redistribute and/or modify this file under the terms of the SIL Open Font License, Version 1.1
+as published by SIL International.
+You should have received a copy of this license along with this file.
+If not, see https://openfontlicense.org/.
+-->
+<svg id="z65309" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	stroke-linejoin:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z65309d1" d="M825 389L824 389Q803 390 781 391Q759 392 748 392L281 398Q257 398 233 398Q209 397 194 396Q179 396 179 417Q179 428 184 438Q189 449 197 449L199 449Q211 447 236 446Q261 446 280 446L747 440Q759 440 783 440Q807 441 830 441Q838 441 842 434Q845 428 845 420Q845 409 840 399Q834 389 825 389ZM825 597L824 597Q803 598 781 599Q759 600 748 600L281 606Q257 606 233 606Q209 605 194 604Q179 604 179 625Q179 636 184 646Q189 657 197 657L199 657Q211 655 236 654Q261 654 280 654L747 648Q759 648 783 648Q807 649 830 649Q838 649 842 642Q845 636 845 628Q845 617 840 607Q834 597 825 597Z"/>
+<path id="z65309d2" d="M825 389L824 389Q803 390 781 391Q759 392 748 392L281 398Q257 398 233 398Q209 397 194 396Q179 396 179 417Q179 428 184 438Q189 449 197 449L199 449Q211 447 236 446Q261 446 280 446L747 440Q759 440 783 440Q807 441 830 441Q838 441 842 434Q845 428 845 420Q845 409 840 399Q834 389 825 389ZM825 597L824 597Q803 598 781 599Q759 600 748 600L281 606Q257 606 233 606Q209 605 194 604Q179 604 179 625Q179 636 184 646Q189 657 197 657L199 657Q211 655 236 654Q261 654 280 654L747 648Q759 648 783 648Q807 649 830 649Q838 649 842 642Q845 636 845 628Q845 617 840 607Q834 597 825 597Z"/>
+<defs>
+	<clipPath id="z65309c1"><use href="#z65309d1"/></clipPath>
+	<clipPath id="z65309c2"><use href="#z65309d2"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z65309c1)" d="M200 419L820 419"/>
+<path style="--d:2s;" pathLength="3333" clip-path="url(#z65309c2)" d="M200 627L820 627"/>
+</svg>

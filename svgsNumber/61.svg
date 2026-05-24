@@ -1,0 +1,41 @@
+<!--
+animNumber 2026 Copyright k1LoW, https://github.com/k1LoW/animNumber
+Derived from:
+    Klee One - https://github.com/fontworks-fonts/Klee
+    Copyright 2020 The Klee Project Authors
+You can redistribute and/or modify this file under the terms of the SIL Open Font License, Version 1.1
+as published by SIL International.
+You should have received a copy of this license along with this file.
+If not, see https://openfontlicense.org/.
+-->
+<svg id="z61" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	stroke-linejoin:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z61d1" d="M729 390L728 390Q686 393 657 393L370 393Q346 393 324 392Q303 392 288 391Q273 391 273 412Q273 423 278 434Q283 444 291 444L293 444Q305 442 328 442Q351 441 369 441L656 441Q672 441 693 442Q714 443 737 443Q745 443 748 437Q751 431 751 424Q751 413 745 402Q739 390 729 390ZM729 580L728 580Q686 583 657 583L370 583Q346 583 324 582Q303 582 288 581Q273 581 273 602Q273 613 278 624Q283 634 291 634L293 634Q305 632 328 632Q351 631 369 631L656 631Q672 631 693 632Q714 633 737 633Q745 633 748 627Q751 621 751 614Q751 603 745 592Q739 580 729 580Z"/>
+<path id="z61d2" d="M729 390L728 390Q686 393 657 393L370 393Q346 393 324 392Q303 392 288 391Q273 391 273 412Q273 423 278 434Q283 444 291 444L293 444Q305 442 328 442Q351 441 369 441L656 441Q672 441 693 442Q714 443 737 443Q745 443 748 437Q751 431 751 424Q751 413 745 402Q739 390 729 390ZM729 580L728 580Q686 583 657 583L370 583Q346 583 324 582Q303 582 288 581Q273 581 273 602Q273 613 278 624Q283 634 291 634L293 634Q305 632 328 632Q351 631 369 631L656 631Q672 631 693 632Q714 633 737 633Q745 633 748 627Q751 621 751 614Q751 603 745 592Q739 580 729 580Z"/>
+<defs>
+	<clipPath id="z61c1"><use href="#z61d1"/></clipPath>
+	<clipPath id="z61c2"><use href="#z61d2"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z61c1)" d="M285 417L741 417"/>
+<path style="--d:2s;" pathLength="3333" clip-path="url(#z61c2)" d="M285 607L741 607"/>
+</svg>

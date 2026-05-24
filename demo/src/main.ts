@@ -1,6 +1,11 @@
 const grid = document.getElementById("grid")!;
 const replayBtn = document.getElementById("replay-btn")!;
 
+const OPERATOR_CODES = [
+  0x2b, 0x2d, 0x3d, 0xd7, 0xf7, // + - = × ÷
+  0xff0b, 0xff0d, 0xff1d,        // ＋ － ＝
+];
+
 const DIGITS = [
   ...Array.from({ length: 10 }, (_, i) => ({
     char: String(i),
@@ -9,6 +14,10 @@ const DIGITS = [
   ...Array.from({ length: 10 }, (_, i) => ({
     char: String.fromCodePoint(0xff10 + i),
     code: 0xff10 + i,
+  })),
+  ...OPERATOR_CODES.map((code) => ({
+    char: String.fromCodePoint(code),
+    code,
   })),
 ];
 

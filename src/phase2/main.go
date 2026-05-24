@@ -271,6 +271,59 @@ var digitMedians = []DigitMedians{
 			},
 		}},
 	}},
+	// --- Half-width math operators (U+002B, U+002D, U+003D, U+00D7, U+00F7) ---
+	// Each glyph's bbox center is at source y=388 (= svg y=512, canvas
+	// vertical center). See phase1/main.go for the corresponding outline
+	// shift (Δy = +114 for '+', +110 for '-' / '=' / '×', +104 for '÷').
+	{Char: '+', Phases: []Phase{
+		// Stroke 1: horizontal bar
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{290, 392}, {735, 392}}},
+		}},
+		// Stroke 2: vertical stem
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{{512, 619}, {512, 159}}},
+		}},
+	}},
+	{Char: '-', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{370, 388}, {655, 388}}},
+		}},
+	}},
+	{Char: '=', Phases: []Phase{
+		// Stroke 1: top bar
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{285, 483}, {741, 483}}},
+		}},
+		// Stroke 2: bottom bar
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{{285, 293}, {741, 293}}},
+		}},
+	}},
+	{Char: '×', Phases: []Phase{
+		// Stroke 1: ／ diagonal (upper-right tip -> lower-left tip)
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{720, 590}, {300, 190}}},
+		}},
+		// Stroke 2: ＼ diagonal (upper-left tip -> lower-right tip)
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{{300, 590}, {720, 190}}},
+		}},
+	}},
+	{Char: '÷', Phases: []Phase{
+		// Stroke 1: middle bar
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{275, 388}, {755, 388}}},
+		}},
+		// Stroke 2: top dot, kanji 点 style (upper-left -> lower-right)
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{{485, 614}, {540, 544}}},
+		}},
+		// Stroke 3: bottom dot, kanji 点 style (upper-left -> lower-right)
+		{Number: 3, Parts: []Part{
+			{Letter: "", Median: []Point{{485, 234}, {540, 164}}},
+		}},
+	}},
 	// Full-width digits (U+FF10-FF19) — Klee One has independent glyphs
 	// for these (slightly wider than half-width). Bootstrap medians:
 	// scaled half-width medians (around x=512). Closed-loop digits
@@ -439,6 +492,32 @@ var digitMedians = []DigitMedians{
 				},
 				LeadOut: []Point{{605, -210}},
 			},
+		}},
+	}},
+	// --- Full-width math operators (U+FF0B, U+FF0D, U+FF1D) ---
+	{Char: '＋', Phases: []Phase{
+		// Stroke 1: horizontal bar
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{200, 383}, {820, 383}}},
+		}},
+		// Stroke 2: vertical stem
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{{512, 700}, {512, 60}}},
+		}},
+	}},
+	{Char: '－', Phases: []Phase{
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{200, 383}, {820, 383}}},
+		}},
+	}},
+	{Char: '＝', Phases: []Phase{
+		// Stroke 1: top bar
+		{Number: 1, Parts: []Part{
+			{Letter: "", Median: []Point{{200, 481}, {820, 481}}},
+		}},
+		// Stroke 2: bottom bar
+		{Number: 2, Parts: []Part{
+			{Letter: "", Median: []Point{{200, 273}, {820, 273}}},
 		}},
 	}},
 }

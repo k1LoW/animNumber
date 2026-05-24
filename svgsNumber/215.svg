@@ -1,0 +1,41 @@
+<!--
+animNumber 2026 Copyright k1LoW, https://github.com/k1LoW/animNumber
+Derived from:
+    Klee One - https://github.com/fontworks-fonts/Klee
+    Copyright 2020 The Klee Project Authors
+You can redistribute and/or modify this file under the terms of the SIL Open Font License, Version 1.1
+as published by SIL International.
+You should have received a copy of this license along with this file.
+If not, see https://openfontlicense.org/.
+-->
+<svg id="z215" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	stroke-linejoin:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z215d1" d="M550 513L679 384Q692 371 712 353Q731 335 740 328Q745 324 745 316Q745 304 737 291Q729 278 718 278Q716 278 712 282Q707 285 694 299Q680 313 648 346L515 479L481 514L344 650Q335 659 318 674Q302 688 286 702Q281 706 281 715Q281 727 290 740Q299 753 308 753Q312 753 315 750Q332 733 348 716Q364 698 374 689L515 548L550 513Z"/>
+<path id="z215d2" d="M515 548L650 682Q660 691 676 708Q693 726 709 743Q712 747 717 747Q726 747 734 734Q743 721 743 709Q743 699 738 695Q722 681 706 666Q689 652 680 643L550 513L515 479L376 339Q344 306 330 292Q316 277 312 274Q308 270 305 270Q295 270 287 284Q279 297 279 309Q279 317 284 321Q293 328 312 346Q332 364 345 377L481 514L515 548Z"/>
+<defs>
+	<clipPath id="z215c1"><use href="#z215d1"/></clipPath>
+	<clipPath id="z215c2"><use href="#z215d2"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z215c1)" d="M720 310L300 710"/>
+<path style="--d:2s;" pathLength="3333" clip-path="url(#z215c2)" d="M300 310L720 710"/>
+</svg>

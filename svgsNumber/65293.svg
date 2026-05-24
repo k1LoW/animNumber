@@ -1,0 +1,38 @@
+<!--
+animNumber 2026 Copyright k1LoW, https://github.com/k1LoW/animNumber
+Derived from:
+    Klee One - https://github.com/fontworks-fonts/Klee
+    Copyright 2020 The Klee Project Authors
+You can redistribute and/or modify this file under the terms of the SIL Open Font License, Version 1.1
+as published by SIL International.
+You should have received a copy of this license along with this file.
+If not, see https://openfontlicense.org/.
+-->
+<svg id="z65293" class="acjk" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<style>
+<![CDATA[
+@keyframes zk {
+	to {
+		stroke-dashoffset:0;
+	}
+}
+svg.acjk path[clip-path] {
+	--t:0.8s;
+	animation:zk var(--t) linear forwards var(--d);
+	stroke-dasharray:3337;
+	stroke-dashoffset:3339;
+	stroke-width:128;
+	stroke-linecap:round;
+	stroke-linejoin:round;
+	fill:none;
+	stroke:#000;
+}
+svg.acjk path[id] {fill:#ccc;}
+]]>
+</style>
+<path id="z65293d1" d="M825 487L824 487Q803 488 781 489Q759 490 748 490L281 496Q257 496 233 496Q209 495 194 494Q179 494 179 515Q179 526 184 536Q189 547 197 547L199 547Q211 545 236 544Q261 544 280 544L747 538Q759 538 783 538Q807 539 830 539Q838 539 842 532Q845 526 845 518Q845 507 840 497Q834 487 825 487Z"/>
+<defs>
+	<clipPath id="z65293c1"><use href="#z65293d1"/></clipPath>
+</defs>
+<path style="--d:1s;" pathLength="3333" clip-path="url(#z65293c1)" d="M200 517L820 517"/>
+</svg>
